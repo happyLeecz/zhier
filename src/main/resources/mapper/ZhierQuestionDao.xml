@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="me.lcz.zhier.dao.ZhierQuestionDao">
+    <insert id="createQuestion">
+        INSERT INTO questions(create_by_who,question_tag,question_text)
+        VALUES (#{createByWho},#{questionTag},#{questionText})
+    </insert>
+
+    <delete id="deleteQuestion">
+        DELETE
+        FROM questions
+        WHERE question_id=#{questionId}
+    </delete>
+
+    <select id="queryById" resultType="ZhierQuestion" parameterType="long">
+        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
+        FROM questions
+        WHERE question_id=#{questionId}
+    </select>
+    
+    <select id="queryAllByUser" resultType="ZhierQuestion" parameterType="long">
+        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
+        from questions
+        WHERE user_id=#{userId}
+    </select>
+    
+    <select id="queryAllByTag" resultType="ZhierQuestion" parameterType="String">
+        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
+        FROM questions
+        WHERE question_tag=#{questionTag}
+    </select>
+    
+    <select id="queryAll" resultType="ZhierQuestion">
+        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
+        FROM questions
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updateQuestion" >
+        UPDATE
+           questions
+        SET
+           question_text=#{newQuestionText},
+           latest_update_time=#{updateTime}
+        WHERE question_id=#{questionId}
+    </update>
+
+</mapper>

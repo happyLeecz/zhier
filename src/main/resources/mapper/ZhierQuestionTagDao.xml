@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="me.lcz.zhier.dao.ZhierQuestionTagDao">
+    <insert id="addQuestionTag">
+        INSERT INTO tags(question_tag)
+        VALUES (#{tagName})
+    </insert>
+
+    <select id="findQuestionTag" resultType="String" parameterType="String">
+        select question_tag
+        FROM tags
+        WHERE question_tag=tagName
+    </select>
+</mapper>
