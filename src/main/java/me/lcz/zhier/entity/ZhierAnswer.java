@@ -12,16 +12,20 @@ public class ZhierAnswer {
 
     private long userId;
 
+    private String userName;
+
     private String answerText;
 
-    private Date crateTime;
+    private Date createTime;
 
-    public Date getCrateTime() {
-        return crateTime;
+    private Date latestUpdateTime;
+
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCrateTime(Date crateTime) {
-        this.crateTime = crateTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public long getAnswerId() {
@@ -40,6 +44,14 @@ public class ZhierAnswer {
         this.userId = userId;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public long getQuestionId() {
         return questionId;
     }
@@ -54,5 +66,13 @@ public class ZhierAnswer {
 
     public void setAnswerText(String answerText) {
         this.answerText = answerText;
+    }
+
+    public Date getLatestUpdateTime() {
+        return latestUpdateTime;
+    }
+
+    public void setLatestUpdateTime(Date latestUpdateTime) {
+        this.latestUpdateTime = latestUpdateTime;
     }
 }

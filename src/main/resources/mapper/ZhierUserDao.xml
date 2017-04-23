@@ -14,13 +14,13 @@
     </delete>
 
     <select id="findUserByUserName" resultType="ZhierUser" parameterType="String">
-        SELECT user_id,user_name,password,user_email,sex,user_autority,create_time
+        SELECT user_id,user_name,password,user_email,sex,user_authority,create_time
         FROM users
         WHERE user_name=#{userName}
     </select>
 
     <select id="queryUserById" resultType="ZhierUser" parameterType="long">
-        SELECT user_id,user_name,password,user_email,sex,user_autority,create_time
+        SELECT user_id,user_name,password,user_email,sex,user_authority,create_time
         FROM users
         WHERE user_id=#{userId}
     </select>

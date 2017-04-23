@@ -2,6 +2,7 @@ package me.lcz.zhier.dao;
 
 
 import me.lcz.zhier.entity.ZhierUser;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Created by lcz on 2017/4/6.
@@ -15,7 +16,7 @@ public interface ZhierUserDao {
      * @param userEmail
      * @param sex
      */
-   int addUser(String userName,String password,String userEmail,int sex);
+   int addUser(@Param("userName") String userName, @Param("password") String password, @Param("userEmail") String userEmail,@Param("sex") int sex);
 
     /**
      * 根据用户名查找用户

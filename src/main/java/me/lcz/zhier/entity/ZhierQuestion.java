@@ -11,7 +11,11 @@ public class ZhierQuestion {
 
     private Date createTime;
 
-    private long createByWho;
+    private Date latestUpdateTime;
+
+    private long createUserId;
+
+    private String createUserName;
 
     private String questionTag;
 
@@ -33,12 +37,28 @@ public class ZhierQuestion {
         this.createTime = createTime;
     }
 
-    public long getCreateByWho() {
-        return createByWho;
+    public Date getLatestUpdateTime() {
+        return latestUpdateTime;
     }
 
-    public void setCreateByWho(long createByWho) {
-        this.createByWho = createByWho;
+    public void setLatestUpdateTime(Date latestUpdateTime) {
+        this.latestUpdateTime = latestUpdateTime;
+    }
+
+    public long getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(long createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
     }
 
     public String getQuestionTag() {

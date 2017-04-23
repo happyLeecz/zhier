@@ -1,6 +1,8 @@
 package me.lcz.zhier.dao;
 
+import me.lcz.zhier.entity.QuestionAndaAnswer;
 import me.lcz.zhier.entity.ZhierAnswer;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -11,12 +13,17 @@ import java.util.List;
 public interface ZhierAnswerDao {
 
     /**
-     * 添加问题回答
+     * 添加回答
      * @param questionId
      * @param userId
+     * @param userName
      * @param answerText
+     * @return
      */
-    int addAnswer(long questionId,long userId,String answerText);
+    int addAnswer(@Param("questionId") long questionId,
+                  @Param("userId") long userId,
+                  @Param("userName")String userName,
+                  @Param("answerText") String answerText);
 
     /**
      * 删除问题回答
@@ -29,7 +36,9 @@ public interface ZhierAnswerDao {
      * @param answerId
      * @param newAnswerText
      */
-    int updateAnswer(long answerId,String newAnswerText,Date updateTime);
+    int updateAnswer(@Param("answerId") long answerId,
+                     @Param("newAnswerText") String newAnswerText,
+                     @Param("updateTime") Date updateTime);
 
     /**
      * 列出该问题所有的回答
@@ -43,7 +52,7 @@ public interface ZhierAnswerDao {
      * @param userId
      * @return
      */
-    List<ZhierAnswer> queryAllByUser(long userId);
+    List<QuestionAndaAnswer> queryAllByUser(long userId);
 
     /**
      * 根据回答Id查出回答

@@ -1,5 +1,6 @@
 package me.lcz.zhier.service;
 
+import me.lcz.zhier.entity.QuestionAndaAnswer;
 import me.lcz.zhier.entity.ZhierAnswer;
 import me.lcz.zhier.entity.ZhierQuestion;
 import me.lcz.zhier.entity.ZhierUser;
@@ -12,17 +13,17 @@ import java.util.List;
 public interface ZhierService {
   //answer about
     List<ZhierAnswer> getAnswerByQuestion(long questionId);
-    List<ZhierAnswer> getAnswerByUser(long userId);
+    List<QuestionAndaAnswer> getAnswerByUser(long userId);
      ZhierAnswer getAnswerById(long answerId);
-    boolean answer(long questionId,long userId,String answerText);
+    boolean answer(long questionId,long userId,String userName,String answerText);
     boolean updateAnswer(long answerId,String newAnswerText);
     boolean deleteAnswer(long answerId);
     //question about
     List<ZhierQuestion> getQuestionByUser(long userId);
     ZhierQuestion getQuestionById(long questionId);
     List<ZhierQuestion> getQuestionByTag(String tagName);
-    List<ZhierQuestion> getAllQuestion();
-    boolean raiseQuestion(long createByWho,String questionTag,String questionText);
+    List<QuestionAndaAnswer> getAllQuestion();
+    boolean raiseQuestion(long createUserId,String createUserName,String questionTag,String questionText);
   boolean deleteQuestion(long questionId);
   boolean updateQuestion(long questionId,String newQuestionText);
     //user about
@@ -32,7 +33,7 @@ public interface ZhierService {
     ZhierUser findUser(String userName);
   boolean userIsRight(String userName,String password);
     //tag about
-    boolean addTag(String tagName);
+    void addTag(String tagName);
 
 
 }

@@ -1,6 +1,8 @@
 package me.lcz.zhier.dao;
 
+import me.lcz.zhier.entity.QuestionAndaAnswer;
 import me.lcz.zhier.entity.ZhierQuestion;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -11,12 +13,16 @@ import java.util.List;
 public interface ZhierQuestionDao {
  /**
   * 创建问题
-  * @param createByWho
+  * @param createUserId
+  * @param createUserName
   * @param questionTag
   * @param questionText
      * @return
      */
- int createQuestion(long createByWho,String questionTag,String questionText);
+ int createQuestion(@Param("createUserId") long createUserId,
+                    @Param("createUserName")String createUserName,
+                    @Param("questionTag")String questionTag,
+                    @Param("questionText") String questionText);
 
  /**
   * 删除问题
@@ -44,7 +50,9 @@ public interface ZhierQuestionDao {
   * @param newQuestionText
      */
 
- int updateQuestion(long questionId,String newQuestionText,Date updateTime);
+ int updateQuestion(@Param("questionId") long questionId,
+                    @Param("newQuestionText") String newQuestionText,
+                    @Param("updateTime") Date updateTime);
 
  /**
   * 根据标签查找问题
@@ -57,6 +65,6 @@ public interface ZhierQuestionDao {
   * 查出所有问题
   * @return
      */
- List<ZhierQuestion> queryAll();
+ List<QuestionAndaAnswer> queryAll();
 
 }

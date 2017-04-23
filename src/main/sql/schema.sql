@@ -1,4 +1,5 @@
-CREATE DATABASE zhier;
+CREATE DATABASE zhier
+CHARACTER SET 'utf8';
 USE zhier;
 
 CREATE TABLE users(
@@ -16,13 +17,14 @@ CREATE TABLE users(
 CREATE TABLE questions(
   `question_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '问题id',
   `create_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '问题创建时间',
-  `latest_update_time` TIMESTAMP DEFAULT NULL COMMENT '问题最近的修改时间',
-  `create_by_who` INT(10) NOT NULL COMMENT '创建问题的用户id',
+  `latest_update_time` TIMESTAMP DEFAULT current_timestamp COMMENT '问题最近的修改时间',
+  `create_user_id` INT(10) NOT NULL COMMENT '创建问题的用户id',
+  `create_user_name`VARCHAR(40) NOT NULL  COMMENT '创建问题的用户名字',
   `question_tag` VARCHAR(10) NOT NULL COMMENT '问题标签',
   `question_text` TEXT NOT NULL COMMENT '问题内容',
   PRIMARY KEY (question_id),
   KEY idx_ques_create_time(create_time),
-  KEY idx_ques_create_by_who(create_by_who)
+  KEY idx_ques_create_user_id(create_user_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '问题表';
 
 create TABLE tags(
@@ -36,9 +38,10 @@ CREATE TABLE answers(
   `answer_id`INT(10) NOT NULL AUTO_INCREMENT COMMENT '问题回答id',
   `question_id`INT(10) NOT NULL COMMENT '问题id',
   `user_id`INT(10) NOT NULL COMMENT '回答问题用户id',
+  `user_name`VARCHAR(40) NOT NULL COMMENT '回答问题用户名字',
   `answer_text`TEXT NOT NULL COMMENT '问题回答内容',
   `create_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '回答时间',
-  `latest_update_time` TIMESTAMP DEFAULT NULL COMMENT '回答最近的修改时间',
+  `latest_update_time` TIMESTAMP DEFAULT current_timestamp COMMENT '回答最近的修改时间',
   PRIMARY KEY (answer_id),
   KEY idx_question_id(question_id),
   KEY idx_user_id(user_id)

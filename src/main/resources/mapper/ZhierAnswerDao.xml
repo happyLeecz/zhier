@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="me.lcz.zhier.dao.ZhierAnswerDao">
 <insert id="addAnswer">
-    insert into answers(question_id,user_id,answer_text)
-    values (#{questionId},#{userId},#{answerText});
+    insert into answers(question_id,user_id,user_name,answer_text)
+    values (#{questionId},#{userId},#{userName},#{answerText});
 </insert>
 
     <delete id="deleteAnswer">
@@ -23,18 +23,20 @@
     </update>
 
     <select id="queryAllByQuestion" resultType="ZhierAnswer" parameterType="long">
-        SELECT answer_id,question_id,user_id,answer_text,create_time,latest_update_time
+        SELECT answer_id,question_id,user_id,user_name,answer_text,create_time,latest_update_time
         FROM answers
         WHERE question_id=#{questionId}
     </select>
 
-    <select id="queryAllByUser" resultType="ZhierAnswer" parameterType="long">
-        SELECT answer_id,question_id,user_id,answer_text,create_time,latest_update_time
-        FROM answers
-        WHERE user_id=#{userId}
+
+    <select id="queryAllByUser" resultType="QuestionAndaAnswer" parameterType="long">
+        SELECT q.question_id,q.question_text,a.answer_id,a.answer_text
+    FROM answers a,questions q
+    WHERE q.question_id = a.question_id
+    AND a.user_id=#{userId}
     </select>
     <select id="queryByAnswerId" resultType="ZhierAnswer" parameterType="long">
-        SELECT answer_id,question_id,user_id,answer_text,create_time,latest_update_time
+        SELECT answer_id,question_id,user_id,user_name,answer_text,create_time,latest_update_time
         FROM answers
         WHERE answer_id=#{answerId}
     </select>

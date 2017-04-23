@@ -11,6 +11,6 @@
     <select id="findQuestionTag" resultType="String" parameterType="String">
         select question_tag
         FROM tags
-        WHERE question_tag=tagName
+        WHERE question_tag=#{tagName}
     </select>
 </mapper>

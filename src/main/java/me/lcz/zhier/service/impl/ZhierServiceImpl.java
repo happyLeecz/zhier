@@ -4,6 +4,7 @@ import me.lcz.zhier.dao.ZhierAnswerDao;
 import me.lcz.zhier.dao.ZhierQuestionDao;
 import me.lcz.zhier.dao.ZhierQuestionTagDao;
 import me.lcz.zhier.dao.ZhierUserDao;
+import me.lcz.zhier.entity.QuestionAndaAnswer;
 import me.lcz.zhier.entity.ZhierAnswer;
 import me.lcz.zhier.entity.ZhierQuestion;
 import me.lcz.zhier.entity.ZhierUser;
@@ -32,7 +33,7 @@ public class ZhierServiceImpl implements ZhierService {
         return zhierAnswerDao.queryAllByQuestion(questionId);
     }
 
-    public List<ZhierAnswer> getAnswerByUser(long userId) {
+    public List<QuestionAndaAnswer> getAnswerByUser(long userId) {
         return zhierAnswerDao.queryAllByUser(userId);
     }
 
@@ -40,22 +41,22 @@ public class ZhierServiceImpl implements ZhierService {
         return zhierAnswerDao.queryByAnswerId(answerId);
     }
 
-    public boolean answer(long questionId, long userId, String answerText) {
-        if(zhierAnswerDao.addAnswer(questionId, userId, answerText)==0)
+    public boolean answer(long questionId, long userId, String userName, String answerText) {
+        if (zhierAnswerDao.addAnswer(questionId, userId, userName, answerText) == 0)
             return false;
         else return true;
     }
 
     public boolean updateAnswer(long answerId, String newAnswerText) {
         Date currentTime = new Date();
-       if(zhierAnswerDao.updateAnswer(answerId, newAnswerText, currentTime)==0)
-           return false;
+        if (zhierAnswerDao.updateAnswer(answerId, newAnswerText, currentTime) == 0)
+            return false;
         else
-           return true;
+            return true;
     }
 
     public boolean deleteAnswer(long answerId) {
-        if(zhierAnswerDao.deleteAnswer(answerId)==0)
+        if (zhierAnswerDao.deleteAnswer(answerId) == 0)
             return false;
         else return true;
 
@@ -73,13 +74,13 @@ public class ZhierServiceImpl implements ZhierService {
         return zhierQuestionDao.queryAllByTag(tagName);
     }
 
-    public List<ZhierQuestion> getAllQuestion() {
+    public List<QuestionAndaAnswer> getAllQuestion() {
         return zhierQuestionDao.queryAll();
     }
 
-    public boolean raiseQuestion(long createByWho, String questionTag, String questionText) {
+    public boolean raiseQuestion(long createUserId, String createUserName, String questionTag, String questionText) {
         addTag(questionTag);
-        if(zhierQuestionDao.createQuestion(createByWho, questionTag, questionText)==0)
+        if (zhierQuestionDao.createQuestion(createUserId, createUserName, questionTag, questionText) == 0)
             return false;
         else
             return true;
@@ -87,7 +88,7 @@ public class ZhierServiceImpl implements ZhierService {
     }
 
     public boolean deleteQuestion(long questionId) {
-        if(zhierQuestionDao.deleteQuestion(questionId)==0)
+        if (zhierQuestionDao.deleteQuestion(questionId) == 0)
             return false;
         else return true;
 
@@ -96,8 +97,8 @@ public class ZhierServiceImpl implements ZhierService {
     public boolean updateQuestion(long questionId, String newQuestionText) {
 
         Date currentTime = new Date();
-        if(zhierQuestionDao.updateQuestion(questionId, newQuestionText, currentTime)
-                ==0)
+        if (zhierQuestionDao.updateQuestion(questionId, newQuestionText, currentTime)
+                == 0)
             return false;
         else return true;
 
@@ -105,14 +106,14 @@ public class ZhierServiceImpl implements ZhierService {
 
     public boolean registUser(String userName, String password, String userEmail, int sex) {
 
-        if(zhierUserDao.addUser(userName, password, userEmail, sex)==0)
+        if (zhierUserDao.addUser(userName, password, userEmail, sex) == 0)
             return false;
         else return true;
 
     }
 
     public boolean deleteUser(long userId) {
-        if(zhierUserDao.deleteUser(userId)==0)
+        if (zhierUserDao.deleteUser(userId) == 0)
             return false;
         else
             return true;
@@ -128,19 +129,16 @@ public class ZhierServiceImpl implements ZhierService {
     }
 
     public boolean userIsRight(String userName, String password) {
-        if(findUser(userName).getPassword().equals(password))
+        if (findUser(userName).getPassword().equals(password))
             return true;
         else
             return false;
     }
 
-    public boolean addTag(String tagName) {
-        if (zhierQuestionTagDao.findQuestionTag(tagName) == null) {
-            if(zhierQuestionTagDao.addQuestionTag(tagName)==0)
-                return false;
-            else
-                return true;
-        }
-        return false;
+    public void addTag(String questionTag) {
+        if (zhierQuestionTagDao.findQuestionTag(questionTag) == null)
+            zhierQuestionTagDao.addQuestionTag(questionTag);
+
+
     }
 }

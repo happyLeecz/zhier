@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
         <mapper namespace="me.lcz.zhier.dao.ZhierQuestionDao">
     <insert id="createQuestion">
-        INSERT INTO questions(create_by_who,question_tag,question_text)
-        VALUES (#{createByWho},#{questionTag},#{questionText})
+        INSERT INTO questions(create_user_id,create_user_name,question_tag,question_text)
+        VALUES (#{createUserId},#{createUserName},#{questionTag},#{questionText})
     </insert>
 
     <delete id="deleteQuestion">
@@ -15,28 +15,36 @@
     </delete>
 
     <select id="queryById" resultType="ZhierQuestion" parameterType="long">
-        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
+        SELECT question_id,create_time,latest_update_time,create_user_id,create_user_name,question_tag,question_text
         FROM questions
         WHERE question_id=#{questionId}
     </select>
     
     <select id="queryAllByUser" resultType="ZhierQuestion" parameterType="long">
-        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
+        SELECT question_id,create_time,latest_update_time,create_user_id,create_user_name,question_tag,question_text
         from questions
-        WHERE user_id=#{userId}
+        WHERE create_user_id=#{userId}
     </select>
     
     <select id="queryAllByTag" resultType="ZhierQuestion" parameterType="String">
-        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
+        SELECT question_id,create_time,latest_update_time,create_user_id,create_user_name,question_tag,question_text
         FROM questions
         WHERE question_tag=#{questionTag}
     </select>
     
-    <select id="queryAll" resultType="ZhierQuestion">
-        SELECT question_id,create_time,latest_update_time,create_by_who,question_tag,question_text
-        FROM questions
-        ORDER BY create_time DESC
+    <!--<select id="queryAll" resultType="ZhierQuestion">-->
+        <!--SELECT question_id,create_time,latest_update_time,create_user_id,create_user_name,question_tag,question_text-->
+        <!--FROM questions-->
+        <!--ORDER BY create_time DESC-->
+    <!--</select>-->
+
+    <select id="queryAll" resultType="QuestionAndaAnswer">
+        SELECT questions.*,answers.answer_id,answers.user_id,answers.user_name,answers.answer_text
+        FROM questions,answers
+        WHERE questions.question_id=answers.question_id
+        GROUP BY questions.question_id
     </select>
+
 
     <update id="updateQuestion" >
         UPDATE
