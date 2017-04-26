@@ -16,7 +16,7 @@
                 <h4 class="modal-title " id="myModalLabel">提问</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form" action="/zhier/raiseQuestion" method="post" onsubmit="return checkIfRight();">
+                <form class="form-horizontal" role="form" >
                     <br/>
                     <br/>
                     <div class="form-group">
@@ -50,7 +50,7 @@
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-3">
-                            <button class="btn btn-primary" type="submit">提交</button>
+                            <button id="btnRaiseQ" class="btn btn-primary" type="button">提交</button>
                         </div>
                     </div>
                 </form>
@@ -146,11 +146,45 @@
     </div>
 </div>
 
+
+</body>
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRaiseQ').click(function(){
+            if(checkIfRight()){
+                $.post('/zhier/raiseQuestion',{questionTag:$('#questionTag').val(),
+                            questionText:$('#questionText').val(),
+                            createUserId:$('#createUserId').val(),
+                            createUserName:$('#createUserName').val()},function (result) {
+                            if(result && result['result']){
+                                console.log('ok');
+                                $('#questionTag').val('');
+                                $('#questionText').val('');
+                                $('#raiseQuestion').modal('hide');
+                            }else {
+                                console.log('not ok');
+                                alert("抱歉，提交未成功");
+                            }
+                        }
+                );}return false;
+        });
+    });
 
+
+    function checkIfRight() {
+        var result =true;
+        if($('#questionTag').val() == ''){
+            result=false;
+        }
+        if($('#questionText').val()==''){
+            result=false;
+        }
+        return result;
+    }
+</script>
 </html>

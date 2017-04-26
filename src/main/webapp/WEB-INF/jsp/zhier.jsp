@@ -54,7 +54,7 @@
 
 
                     <div class="tab-pane" id="tab2">
-                        <form class="form-horizontal" role="form" action="/zhier/register" method="post" onsubmit="return checkIfRight();">
+                        <form id = "form2" class="form-horizontal" role="form" method="post" action="/zhier/register" onsubmit="checkIfRight()">
                             <br/>
                             <br/>
                             <div class="form-group">
@@ -101,7 +101,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-3">
-                                    <button class="btn btn-primary" type="submit">注册</button>
+                                    <button id = "btn1" class="btn btn-primary" type="submit">注册</button>
                                 </div>
                             </div>
                         </form>
@@ -119,6 +119,7 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+
     function checkIfRight() {
         var result = true;
         if ($('#inputName3').val() == '') {
@@ -164,5 +165,8 @@
         }
         return result;
     }
+
+
+
     </script>
 </html>

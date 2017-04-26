@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -36,18 +37,19 @@ public class ZhierController {
  }
     //注册
     @RequestMapping(value = "/register",
-            method = RequestMethod.POST,
-            produces = {"application/json;charset=UTF-8"})
-    @ResponseBody
- public ActionResult register(@RequestParam(value="userName")String userName,
+            method = RequestMethod.POST)
+ public String register(@RequestParam(value="userName")String userName,
                               @RequestParam(value="password")String password,
                               @RequestParam(value="userEmail")String userEmail,
                               @RequestParam(value="sex")int sex,
-                              Model model){
+                               HttpSession httpSession,Model model){
      boolean ifSuccess = zhierService.registUser(userName,password,userEmail,sex);
-     ActionResult actionResult = new ActionResult(TableEnum.USERS.getWhichTable(),ifSuccess);
-        return actionResult;
+        if(ifSuccess){
+            ZhierUser zhierUser =zhierService.findUser(userName);
+            httpSession.setAttribute("zhieruser",zhierUser);
 
+        }
+        return "redirect:/zhier";
     }
     //登陆
     @RequestMapping(value = "/login",method = RequestMethod.POST)
@@ -59,12 +61,12 @@ public class ZhierController {
           //为什么用forward，因为有个zhierUser,如果用redirect
           //虽然url会变但是数据过不去
           httpSession.setAttribute("zhieruser",zhierUser);
-          List<QuestionAndaAnswer> questionAndaAnswers = zhierService.getAllQuestion();
-          model.addAttribute("qandanswers",questionAndaAnswers);
+//          List<QuestionAndaAnswer> questionAndaAnswers = zhierService.getAllQuestion();
+//          model.addAttribute("qandanswers",questionAndaAnswers);
 
-          return "homePage";
+          return "redirect:/zhier";
       }else
-          return "redirect:";
+          return "redirect:/zhier";
     }
     @RequestMapping(value = "/{userId}/user",method = RequestMethod.GET)
     public String toUserPage(@PathVariable("userId")long userId,Model model){
@@ -93,11 +95,13 @@ public class ZhierController {
             produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public ActionResult raiseQuestion(@RequestParam(value = "createUserId") long createUserId,
-                                      @RequestParam(value = "createUserName") String createUserName,
-                                      @RequestParam(value = "questionTag")String questionTag,
-                                      @RequestParam(value = "questionText")String questionText){
+                                @RequestParam(value = "createUserName") String createUserName,
+                                @RequestParam(value = "questionTag")String questionTag,
+                                @RequestParam(value = "questionText")String questionText
+                                ){
+
         boolean isSuccess = zhierService.raiseQuestion(createUserId,createUserName,questionTag,questionText);
-        return new ActionResult(TableEnum.QUESTIONS.getWhichTable(),isSuccess);
+       return new ActionResult(TableEnum.QUESTIONS.getWhichTable(),isSuccess);
     }
 
 
@@ -160,7 +164,13 @@ public class ZhierController {
     method = RequestMethod.GET)
     public String quit(HttpSession httpSession){
         httpSession.removeAttribute("zhieruser");
-        return "redirect:";
+        return "redirect:/zhier";
+    }
+
+    @RequestMapping(value = "/search",
+    method = RequestMethod.POST)
+    public String search(String searchText){
+           return "homePage";
     }
 
 }

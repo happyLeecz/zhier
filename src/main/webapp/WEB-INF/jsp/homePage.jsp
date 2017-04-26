@@ -12,52 +12,52 @@
 <body>
 <!-- 提问弹出层用来提交提问表格 -->
 <div class="modal fade" id="raiseQuestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title " id="myModalLabel">提问</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" role="form" action="/zhier/raiseQuestion" method="post" onsubmit="return checkIfRight();">
-                    <br/>
-                    <br/>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="questionTag">问题标签</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" id="questionTag" type="text" name="questionTag"/>
-                        </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title " id="myModalLabel">提问</h4>
                     </div>
+                    <div class="modal-body">
+                        <form id="formRaiseQ" class="form-horizontal" role="form"  >
+                            <br/>
+                            <br/>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="questionTag">问题标签</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="questionTag" type="text" name="questionTag"/>
+                                </div>
+                            </div>
 
 
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="questionText">问题内容</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control " rows="8" id="questionText" name="questionText"></textarea>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="questionText">问题内容</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control " rows="8" id="questionText" name="questionText"></textarea>
+                                </div>
+                            </div>
 
-                    <div class="form-group hidden" >
-                        <label class="col-sm-2 control-label" for="createUserId">创建问题用户id</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" id="createUserId" type="number" name="createUserId" value="${zhieruser.userId}"/>
-                        </div>
-                    </div>
+                            <div class="form-group hidden" >
+                                <label class="col-sm-2 control-label" for="createUserId">创建问题用户id</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="createUserId" type="number" name="createUserId" value="${zhieruser.userId}"/>
+                                </div>
+                            </div>
 
-                    <div class="form-group hidden" >
-                        <label class="col-sm-2 control-label" for="createUserName">创建问题用户名</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" id="createUserName" type="text" name="createUserName" value="${zhieruser.userName}"/>
-                        </div>
-                    </div>
+                            <div class="form-group hidden" >
+                                <label class="col-sm-2 control-label" for="createUserName">创建问题用户名</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="createUserName" type="text" name="createUserName" value="${zhieruser.userName}"/>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-3">
-                            <button class="btn btn-primary" type="submit">提交</button>
-                        </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-3">
+                                    <button id="btnRaiseQ" class="btn btn-primary" type="button">提交</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
@@ -81,9 +81,9 @@
                     </ul>
 
 
-                    <form class="navbar-form navbar-left" role="search">
+                    <form class="navbar-form navbar-left" role="search" method="post" action="/zhier/search">
                         <div class="form-group">
-                            <input class="form-control" type="text" />
+                            <input class="form-control" type="text" name="searchText"/>
                         </div> <button class="btn btn-primary" type="submit">搜索</button>
                     </form>
                     <ul class="nav navbar-nav navbar-right">
@@ -135,6 +135,31 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+$('#btnRaiseQ').click(function(){
+             if(checkIfRight()){
+            $.post('/zhier/raiseQuestion',{questionTag:$('#questionTag').val(),
+                questionText:$('#questionText').val(),
+                createUserId:$('#createUserId').val(),
+            createUserName:$('#createUserName').val()},function (result) {
+                    if(result && result['result']){
+                        console.log('ok');
+                        $('#questionTag').val('');
+                        $('#questionText').val('');
+                        $('#raiseQuestion').modal('hide');
+                    }else {
+                        console.log('not ok');
+                         alert("抱歉，提交未成功");
+                    }
+                }
+    );}return false;
+        });
+    });
+
+
+
+
+
     function checkIfRight() {
         var result =true;
         if($('#questionTag').val() == ''){
@@ -145,6 +170,9 @@
         }
         return result;
     }
+
+
+
 </script>
 
 </html>

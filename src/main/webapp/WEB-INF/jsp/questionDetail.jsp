@@ -15,7 +15,7 @@
                 <h4 class="modal-title " id="myModalLabel">提问</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form" action="/zhier/raiseQuestion" method="post" onsubmit="return checkIfRight();">
+                <form class="form-horizontal" role="form" >
                     <br/>
                     <br/>
                     <div class="form-group">
@@ -49,7 +49,7 @@
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-3">
-                            <button class="btn btn-primary" type="submit">提交</button>
+                            <button id="btnRaiseQ" class="btn btn-primary" type="button">提交</button>
                         </div>
                     </div>
                 </form>
@@ -67,7 +67,7 @@
                 <h4 class="modal-title " id="myModalLabel1">修改问题</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form" action="/zhier/${zhierquestion.questionId}/updateQ" method="post" onsubmit="return checkIfRight();">
+                <form class="form-horizontal" role="form" >
                     <br/>
                     <br/>
 
@@ -79,7 +79,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-3">
-                            <button class="btn btn-primary" type="submit">提交</button>
+                            <button id="btnUpdateQ" class="btn btn-primary" type="button">提交</button>
                         </div>
                     </div>
                 </form>
@@ -172,6 +172,57 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRaiseQ').click(function(){
+            if(checkIfRight()){
+                $.post('/zhier/raiseQuestion',{questionTag:$('#questionTag').val(),
+                            questionText:$('#questionText').val(),
+                            createUserId:$('#createUserId').val(),
+                            createUserName:$('#createUserName').val()},function (result) {
+                            if(result && result['result']){
+                                console.log('ok');
+                                $('#questionTag').val('');
+                                $('#questionText').val('');
+                                $('#raiseQuestion').modal('hide');
+                            }else {
+                                console.log('not ok');
+                                alert("抱歉，提交未成功");
+                            }
+                        }
+                );}return false;
+        });
+
+
+        $('#btnUpdateQ').click(function(){
+           var url='/zhier/'+ ${zhierquestion.questionId} + '/updateQ';
+                $.post(url,{newQuestionText:$('#newQuestionText').val()},function (result) {
+                            if(result && result['result']){
+                                $('#updateQuestion').modal('hide');
+                                window.location.reload();
+                            }else {
+                                console.log('not ok');
+                                alert("抱歉，提交未成功");
+                            }
+                        }
+                );
+        });
+
+
+
+    });
+
+    function checkIfRight() {
+        var result =true;
+        if($('#questionTag').val() == ''){
+            result=false;
+        }
+        if($('#questionText').val()==''){
+            result=false;
+        }
+        return result;
+    }
+
+
     $(function () {
         var userId = ${zhieruser.userId},createUserId=${zhierquestion.createUserId},
                 userAuthority = ${zhieruser.userAuthority};

@@ -29,9 +29,9 @@ CREATE TABLE questions(
 
 create TABLE tags(
   `question_tag` VARCHAR(10) NOT NULL COMMENT '问题标签',
-  `createTime` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '标签创建时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT current_timestamp COMMENT '标签创建时间',
   PRIMARY KEY (question_tag),
-  KEY idx_tag_create_time(createTime)
+  KEY idx_tag_create_time(create_time)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '问题标签表';
 
 CREATE TABLE answers(

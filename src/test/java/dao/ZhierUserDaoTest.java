@@ -21,4 +21,6 @@ public class ZhierUserDaoTest {
        int result= zhierUserDao.addUser("1234","1234","18698941912@163.com",1);
        System.out.println(result);
    }
+
+
 }

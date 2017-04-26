@@ -22,6 +22,7 @@ private ZhierQuestionDao zhierQuestionDao;
 
     @Test
     public void raiseQuestion(){
-       zhierQuestionDao.createQuestion(1,"123","台灯","台灯什么样的好？");
+       int a = zhierQuestionDao.createQuestion(1,"123","火焰","什么是火焰？");
+        System.out.println(a);
    }
 }

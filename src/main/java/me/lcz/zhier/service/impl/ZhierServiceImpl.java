@@ -105,10 +105,13 @@ public class ZhierServiceImpl implements ZhierService {
     }
 
     public boolean registUser(String userName, String password, String userEmail, int sex) {
-
-        if (zhierUserDao.addUser(userName, password, userEmail, sex) == 0)
+        if(zhierUserDao.findUserByUserName(userName)==null) {
+            if (zhierUserDao.addUser(userName, password, userEmail, sex) == 0)
+                return false;
+            else
+                return true;
+        }else
             return false;
-        else return true;
 
     }
 
