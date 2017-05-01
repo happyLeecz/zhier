@@ -40,4 +40,10 @@
         FROM answers
         WHERE answer_id=#{answerId}
     </select>
+
+    <select id="queryByIds" resultType="ZhierAnswer">
+        SELECT *
+        FROM answers
+        WHERE user_id =#{userId} AND question_id =#{questionId}
+    </select>
 </mapper>

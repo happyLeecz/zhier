@@ -6,7 +6,11 @@
     <title>欢迎来到Zhier</title>
     <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-
+<style type="text/css">
+a.answer:hover{
+    text-decoration: none;
+}
+</style>
 
 </head>
 <body>
@@ -81,9 +85,9 @@
                     </ul>
 
 
-                    <form class="navbar-form navbar-left" role="search" method="post" action="/zhier/search">
+                    <form class="navbar-form navbar-left" role="search" method="post" action="/zhier/search" onsubmit="return check()">
                         <div class="form-group">
-                            <input class="form-control" type="text" name="searchText"/>
+                            <input class="form-control" type="text" name="searchText" id="searchText"/>
                         </div> <button class="btn btn-primary" type="submit">搜索</button>
                     </form>
                     <ul class="nav navbar-nav navbar-right">
@@ -110,15 +114,17 @@
             <br/>
 <c:forEach var="qandanswer" items="${qandanswers}">
             <div class="jumbotron">
-                <span class="label label-default" >${qandanswer.questionTag}</span>
+                <span class="label label-primary" ><a style="color:white" href="/zhier/${qandanswer.questionTag}/questionsByTag">${qandanswer.questionTag}</a> </span>
                 <h1>
-                    <a href="/zhier/${qandanswer.questionId}/question">${qandanswer.questionText}</a>
+                    <a  style="color:blueviolet" href="/zhier/${qandanswer.questionId}/question">${qandanswer.questionText}</a>
                 </h1>
+                <br/>
+                <br/>
                 <p>
-                    <b><a href="/zhier/${qandanswer.userId}/user">${qandanswer.userName}</a></b>
+                    <b><a style="color:black" href="/zhier/${qandanswer.userId}/user">${qandanswer.userName}</a></b>
                 </p>
                 <p>
-                    <a href="/zhier/${qandanswer.questionId}/question/${qandanswer.answerId}/answer">${qandanswer.answerText}</a>
+                    <a class="answer" style="color:black" href="/zhier/${qandanswer.questionId}/question/${qandanswer.answerId}/answer">${fn:substring(qandanswer.answerText,0,60)}...</a>
                 </p>
 
             </div>
@@ -169,6 +175,13 @@ $('#btnRaiseQ').click(function(){
             result=false;
         }
         return result;
+    }
+
+    function check() {
+        if($('#searchText').val()=='')
+            return false;
+        else
+            return true;
     }
 
 

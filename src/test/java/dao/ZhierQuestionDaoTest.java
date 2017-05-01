@@ -25,4 +25,12 @@ private ZhierQuestionDao zhierQuestionDao;
        int a = zhierQuestionDao.createQuestion(1,"123","火焰","什么是火焰？");
         System.out.println(a);
    }
+    @Test
+    public void search(){
+        List<ZhierQuestion> zhierQuestion = zhierQuestionDao.queryByKeyword("天王星");
+        System.out.println(zhierQuestion == null);
+        for (ZhierQuestion a : zhierQuestion){
+            System.out.println(a.getQuestionText());
+        }
+    }
 }

@@ -41,6 +41,14 @@ public class ZhierServiceImpl implements ZhierService {
         return zhierAnswerDao.queryByAnswerId(answerId);
     }
 
+    public boolean ifHaveAnswered(long userId, long questionId) {
+
+        if(zhierAnswerDao.queryByIds(userId,questionId)==null)
+            return false;
+        else
+            return true;
+    }
+
     public boolean answer(long questionId, long userId, String userName, String answerText) {
         if (zhierAnswerDao.addAnswer(questionId, userId, userName, answerText) == 0)
             return false;
@@ -104,6 +112,10 @@ public class ZhierServiceImpl implements ZhierService {
 
     }
 
+    public List<ZhierQuestion> searchQuestion(String keyword) {
+        return zhierQuestionDao.queryByKeyword(keyword);
+    }
+
     public boolean registUser(String userName, String password, String userEmail, int sex) {
         if(zhierUserDao.findUserByUserName(userName)==null) {
             if (zhierUserDao.addUser(userName, password, userEmail, sex) == 0)
@@ -131,6 +143,10 @@ public class ZhierServiceImpl implements ZhierService {
         return zhierUserDao.findUserByUserName(userName);
     }
 
+    public List<ZhierUser> findUserByKeyword(String keyword) {
+        return zhierUserDao.queryUserByKeyword(keyword);
+    }
+
     public boolean userIsRight(String userName, String password) {
         if (findUser(userName).getPassword().equals(password))
             return true;
@@ -143,5 +159,9 @@ public class ZhierServiceImpl implements ZhierService {
             zhierQuestionTagDao.addQuestionTag(questionTag);
 
 
+    }
+
+    public List<String> findTagByKeyword(String keyword) {
+        return zhierQuestionTagDao.findTagByKeyword(keyword);
     }
 }

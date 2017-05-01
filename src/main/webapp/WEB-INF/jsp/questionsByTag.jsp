@@ -1,12 +1,14 @@
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page  contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="common/tag.jsp"%>
+
 <html>
 <head>
     <title>欢迎来到Zhier</title>
     <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 </head>
 <body>
+<!-- 提问弹出层用来提交提问表格 -->
 <div class="modal fade" id="raiseQuestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -15,7 +17,7 @@
                 <h4 class="modal-title " id="myModalLabel">提问</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form" >
+                <form id="formRaiseQ" class="form-horizontal" role="form"  >
                     <br/>
                     <br/>
                     <div class="form-group">
@@ -57,34 +59,6 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
-<div class="modal fade" id="updateAnswer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title " id="myModalLabel1">修改回答</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" role="form">
-                    <br/>
-                    <br/>
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="newAnswerText">问题内容</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control " rows="8" id="newAnswerText" name="newAnswerText">${zhieranswer.answerText}</textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-3">
-                            <button id="btnUpdateA" class="btn btn-primary" type="button">提交</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
@@ -97,11 +71,14 @@
                     <ul class="nav navbar-nav">
                         <li>
                             <a href="#raiseQuestion" data-toggle="modal" >提问</a>
+
                         </li>
                         <li>
                             <a href="#">标签</a>
                         </li>
                     </ul>
+
+
                     <form class="navbar-form navbar-left" role="search" method="post" action="/zhier/search" onsubmit="return check()">
                         <div class="form-group">
                             <input class="form-control" type="text" name="searchText" id="searchText"/>
@@ -124,54 +101,32 @@
 
                     </ul>
                 </div>
-
             </nav>
             <br/>
             <br/>
             <br/>
             <br/>
-            <div class="jumbotron">
-                <span class="label label-primary" ><a style="color:white" href="/zhier/${zhierquestion.questionTag}/questionsByTag">${zhierquestion.questionTag}</a></span>
-                <h1>
-                    <a style="color:blueviolet" href="/zhier/${zhierquestion.questionId}/question">${zhierquestion.questionText}</a>
-                </h1>
-                <br/>
-                <br/>
-                <h6>发布人：<a style="color:blueviolet" href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h6>
-                <h6>发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-                <h6>最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-            </div>
+            <c:forEach var="question" items="${questions}">
+                <div class="jumbotron">
+                    <span class="label label-primary" ><a style="color:white" href="/zhier/${question.questionTag}/questionsByTag">${question.questionTag}</a> </span>
+                    <h1>
+                        <a  style="color:blueviolet" href="/zhier/${question.questionId}/question">${question.questionText}</a>
+                    </h1>
+                </div>
+            </c:forEach>
+
         </div>
+
     </div>
-
-    <h2>
-        <a style="color:black" href="/zhier/${zhieranswer.userId}/user">${zhieranswer.userName}</a>
-    </h2>
-    <p>
-        ${zhieranswer.answerText}
-       </p>
-    <br/>
-
-    <h6>回答于：<fmt:formatDate value="${zhieranswer.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-    <h6>最近更新时间：<fmt:formatDate value="${zhieranswer.latestUpdateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-    <a class="btn btn-primary btn-large" data-toggle="modal" href="#updateAnswer" id="updateAnswerBtn">修改回答</a>
-    <hr />
-
-
-
-
+</div>
 </div>
 </body>
-<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#updateAnswerBtn').hide();
-
         $('#btnRaiseQ').click(function(){
             if(checkIfRight()){
                 $.post('/zhier/raiseQuestion',{questionTag:$('#questionTag').val(),
@@ -190,33 +145,11 @@
                         }
                 );}return false;
         });
-
-
-
-        $('#btnUpdateA').click(function(){
-            var url='/zhier/'+ ${zhierquestion.questionId} + '/question/' + ${zhieranswer.answerId} +'/updateA';
-            $.post(url,{newAnswerText:$('#newAnswerText').val()},function (result) {
-                        if(result && result['result']){
-                            $('#updateAnswer').modal('hide');
-                            window.location.reload();
-                        }else {
-                            console.log('not ok');
-                            alert("抱歉，提交未成功");
-                        }
-                    }
-            );
-        });
-
-        $(function () {
-            var userId=${zhieruser.userId},answerUserId=${zhieranswer.userId};
-            if(userId == answerUserId)
-                $('#updateAnswerBtn').show();
-
-        });
-
-
-
     });
+
+
+
+
 
     function checkIfRight() {
         var result =true;
@@ -229,22 +162,13 @@
         return result;
     }
 
-
-
-
-    function checkIfRight2() {
-        var result = true;
-        if($('#newAnswerText').val()==''){
-            result = false;
-        }
-        return result;
-    }
-
     function check() {
         if($('#searchText').val()=='')
             return false;
         else
             return true;
     }
+
 </script>
+
 </html>

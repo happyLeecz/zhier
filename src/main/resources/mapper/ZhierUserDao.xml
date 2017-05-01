@@ -25,4 +25,10 @@
         WHERE user_id=#{userId}
     </select>
 
+    <select id="queryUserByKeyword" resultType="ZhierUser" parameterType="String">
+        SELECT *
+        FROM users
+        WHERE user_name LIKE CONCAT(CONCAT('%',#{keyword}),'%')
+    </select>
+
 </mapper>

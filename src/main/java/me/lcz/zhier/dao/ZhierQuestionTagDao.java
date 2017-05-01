@@ -1,5 +1,7 @@
 package me.lcz.zhier.dao;
 
+import java.util.List;
+
 /**
  * Created by lcz on 2017/4/6.
  */
@@ -16,4 +18,11 @@ public interface ZhierQuestionTagDao {
      * @return
      */
     String findQuestionTag(String tagName);
+
+    /**
+     * 根据关键字查找标签
+     * @param keyword
+     * @return
+     */
+    List<String> findTagByKeyword(String keyword);
 }

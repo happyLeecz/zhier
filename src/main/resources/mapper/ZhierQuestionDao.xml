@@ -25,12 +25,18 @@
         from questions
         WHERE create_user_id=#{userId}
     </select>
-    
     <select id="queryAllByTag" resultType="ZhierQuestion" parameterType="String">
-        SELECT question_id,create_time,latest_update_time,create_user_id,create_user_name,question_tag,question_text
+        SELECT *
         FROM questions
-        WHERE question_tag=#{questionTag}
+        WHERE question_tag =#{questionTag}
     </select>
+    
+    <!--<select id="queryAllByTag" resultType="QuestionAndaAnswer" parameterType="String">-->
+        <!--SELECT q.question_id,q.question_text,q.question_tag,a.answer_id,a.answer_text-->
+        <!--FROM questions q,answers a-->
+        <!--WHERE q.question_id=a.question_id AND q.question_tag=#{questionTag}-->
+        <!--GROUP BY q.question_id-->
+    <!--</select>-->
     
     <!--<select id="queryAll" resultType="ZhierQuestion">-->
         <!--SELECT question_id,create_time,latest_update_time,create_user_id,create_user_name,question_tag,question_text-->
@@ -39,10 +45,10 @@
     <!--</select>-->
 
     <select id="queryAll" resultType="QuestionAndaAnswer">
-        SELECT questions.*,answers.answer_id,answers.user_id,answers.user_name,answers.answer_text
-        FROM questions,answers
-        WHERE questions.question_id=answers.question_id
-        GROUP BY questions.question_id
+        SELECT q.*,a.answer_id,a.user_id,a.user_name,a.answer_text
+        FROM questions q,answers a
+        WHERE q.question_id=a.question_id
+        GROUP BY q.question_id
     </select>
 
 
@@ -54,5 +60,11 @@
            latest_update_time=#{updateTime}
         WHERE question_id=#{questionId}
     </update>
+
+    <select id="queryByKeyword" resultType="ZhierQuestion" parameterType="String">
+        SELECT *
+        FROM questions
+        WHERE question_text LIKE CONCAT(CONCAT('%',#{keyword}),'%')
+    </select>
 
 </mapper>

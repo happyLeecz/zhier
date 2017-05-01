@@ -75,9 +75,9 @@
                             <a href="#">标签</a>
                         </li>
                     </ul>
-                    <form class="navbar-form navbar-left" role="search">
+                    <form class="navbar-form navbar-left" role="search" method="post" action="/zhier/search" onsubmit="return check()">
                         <div class="form-group">
-                            <input class="form-control" type="text" />
+                            <input class="form-control" type="text" name="searchText" id="searchText"/>
                         </div> <button class="btn btn-primary" type="submit">搜索</button>
                     </form>
                     <ul class="nav navbar-nav navbar-right">
@@ -121,7 +121,7 @@
                             <a href="/zhier/${answer.questionId}/question">${answer.questionText}</a>
                         </h2>
                         <p>
-                            ${answer.answerText}<a class="btn" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer">查看回答 »</a>
+                                ${fn:substring(answer.answerText,0,60)}...<a class="btn" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer">查看回答 »</a>
                         </p>
                         <hr/>
                     </div>
@@ -185,6 +185,13 @@
             result=false;
         }
         return result;
+    }
+
+    function check() {
+        if($('#searchText').val()=='')
+            return false;
+        else
+            return true;
     }
 </script>
 </html>

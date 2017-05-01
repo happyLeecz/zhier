@@ -61,4 +61,7 @@ public interface ZhierAnswerDao {
      */
     ZhierAnswer queryByAnswerId(long answerId);
 
+
+    ZhierAnswer queryByIds(@Param("userId") long userId,@Param("questionId") long questionId);
+
 }

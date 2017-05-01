@@ -67,4 +67,11 @@ public interface ZhierQuestionDao {
      */
  List<QuestionAndaAnswer> queryAll();
 
+ /**
+  * 查询问题
+  * @param keyword
+  * @return
+     */
+ List<ZhierQuestion> queryByKeyword(String keyword);
+
 }

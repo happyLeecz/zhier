@@ -54,7 +54,7 @@
 
 
                     <div class="tab-pane" id="tab2">
-                        <form id = "form2" class="form-horizontal" role="form" method="post" action="/zhier/register" onsubmit="checkIfRight()">
+                        <form id = "form2" class="form-horizontal" role="form" method="post" action="/zhier/register" onsubmit="return checkIfRight()">
                             <br/>
                             <br/>
                             <div class="form-group">

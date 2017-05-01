@@ -4,6 +4,8 @@ package me.lcz.zhier.dao;
 import me.lcz.zhier.entity.ZhierUser;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Created by lcz on 2017/4/6.
  */
@@ -36,4 +38,14 @@ public interface ZhierUserDao {
      * @return
      */
     ZhierUser queryUserById(long userId);
+
+    /**
+     * 根据关键词查找用户
+     * @param keyword
+     * @return
+     */
+    List<ZhierUser> queryUserByKeyword(String keyword);
+
+
+
 }

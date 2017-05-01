@@ -13,4 +13,10 @@
         FROM tags
         WHERE question_tag=#{tagName}
     </select>
+
+    <select id="findTagByKeyword" resultType="String" parameterType="String">
+        SELECT question_tag
+        FROM tags
+        WHERE question_tag LIKE CONCAT(CONCAT('%',#{keyword}),'%')
+    </select>
 </mapper>
