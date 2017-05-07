@@ -171,26 +171,38 @@
                 </h1>
                 <br/>
                 <br/>
-                <h6>发布人：<a style="color:blueviolet" href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h6>
-                <h6>发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-                <h6>最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
+                <h6 >发布人：<a  href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h6>
+                <h6 >发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                <h6 >最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
                 <a class="btn btn-primary btn-large "data-toggle="modal" href="#answerQuestion" id="answerQuestionBtn">回答问题</a>
                 <a class="btn btn-primary btn-large" data-toggle="modal" href="#updateQuestion" id="updateQuestionBtn">修改问题</a>
+
             </div>
         </div>
     </div>
 
-<c:forEach var="answer" items="${answers}">
+<c:forEach var="answer" items="${answers}" varStatus="a">
     <h2>
         <a style="color:black" href="/zhier/${answer.userId}/user">${answer.userName}</a>
     </h2>
-    <p>
+    <h3>
             ${fn:substring(answer.answerText,0,60)}...<a  style="color:blueviolet" class="btn " href="/zhier/${zhierquestion.questionId}/question/${answer.answerId}/answer">查看全部 »</a>
-    </p>
+    </h3>
     <br/>
-    <h6>回答于：<fmt:formatDate value="${answer.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></h6>
-    <h6>最近更新时间：<fmt:formatDate value="${answer.latestUpdateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></h6>
+    <h6 style="color:blueviolet">回答于：<fmt:formatDate value="${answer.createTime}" pattern="yyyy年MM月dd日 HH:mm"/></h6>
+    <h6 style="color:blueviolet">最近更新时间：<fmt:formatDate value="${answer.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/></h6>
+    <ul class="nav nav-pills" >
+        <li >
+            <a class="btn disabled"  > <span   class="badge pull-right">${likenums[a.index]}</span> 赞</a>
+        </li>
+        <li >
+            <a class="btn disabled"  > <span   class="badge pull-right">${dislikenums[a.index]}</span> 反对</a>
+        </li>
+
+    </ul>
     <hr />
+
+
 </c:forEach>
 
 

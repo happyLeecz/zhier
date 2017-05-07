@@ -1,13 +1,7 @@
 package me.lcz.zhier.service.impl;
 
-import me.lcz.zhier.dao.ZhierAnswerDao;
-import me.lcz.zhier.dao.ZhierQuestionDao;
-import me.lcz.zhier.dao.ZhierQuestionTagDao;
-import me.lcz.zhier.dao.ZhierUserDao;
-import me.lcz.zhier.entity.QuestionAndaAnswer;
-import me.lcz.zhier.entity.ZhierAnswer;
-import me.lcz.zhier.entity.ZhierQuestion;
-import me.lcz.zhier.entity.ZhierUser;
+import me.lcz.zhier.dao.*;
+import me.lcz.zhier.entity.*;
 import me.lcz.zhier.service.ZhierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +22,8 @@ public class ZhierServiceImpl implements ZhierService {
     private ZhierUserDao zhierUserDao;
     @Autowired
     private ZhierQuestionTagDao zhierQuestionTagDao;
+    @Autowired
+    private AnswerLikeAboutDao answerLikeAboutDao;
 
     public List<ZhierAnswer> getAnswerByQuestion(long questionId) {
         return zhierAnswerDao.queryAllByQuestion(questionId);
@@ -161,7 +157,27 @@ public class ZhierServiceImpl implements ZhierService {
 
     }
 
+
     public List<String> findTagByKeyword(String keyword) {
         return zhierQuestionTagDao.findTagByKeyword(keyword);
     }
+
+    public AnswerLikeAbout findUserLikes(long answerId, long userId) {
+        return answerLikeAboutDao.queryInfo(answerId,userId);
+    }
+
+    public void addLikes(long answerId, long userId, int type) {
+        answerLikeAboutDao.insertInfo(answerId, userId, type);
+    }
+
+    public void updateLikes(long answerId, long userId, int type) {
+        answerLikeAboutDao.updateInfo(answerId, userId, type);
+    }
+
+    public int getLikesNum(long answerId, int type) {
+        return answerLikeAboutDao.queryInfoNum(answerId, type);
+    }
 }
+
+
+

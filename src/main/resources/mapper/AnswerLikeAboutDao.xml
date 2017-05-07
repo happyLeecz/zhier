@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.lcz.zhier.dao.AnswerLikeAboutDao">
+
+    <select id="queryInfo" resultType="AnswerLikeAbout">
+        SELECT *
+        FROM answerlikeabout
+        WHERE answer_id=#{answerId} AND user_id=#{userId}
+    </select>
+
+    <insert id="insertInfo">
+        INSERT INTO answerlikeabout
+        VALUES (#{answerId},#{userId},#{type})
+    </insert>
+
+    <update id="updateInfo">
+        UPDATE answerlikeabout
+        SET types=#{type}
+        WHERE answer_id=#{answerId} AND user_id=#{userId}
+    </update>
+
+    <select id="queryInfoNum" resultType="int">
+        SELECT COUNT(*)
+        FROM answerlikeabout
+        WHERE answer_id=#{answerId} and types=#{type}
+    </select>
+
+
+
+</mapper>

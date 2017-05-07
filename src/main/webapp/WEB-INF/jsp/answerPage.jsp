@@ -138,8 +138,8 @@
                 <br/>
                 <br/>
                 <h6>发布人：<a style="color:blueviolet" href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h6>
-                <h6>发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-                <h6>最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
+                <h6>发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                <h6>最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
             </div>
         </div>
     </div>
@@ -147,14 +147,25 @@
     <h2>
         <a style="color:black" href="/zhier/${zhieranswer.userId}/user">${zhieranswer.userName}</a>
     </h2>
-    <p>
+    <h3>
         ${zhieranswer.answerText}
-       </p>
+       </h3>
     <br/>
 
-    <h6>回答于：<fmt:formatDate value="${zhieranswer.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-    <h6>最近更新时间：<fmt:formatDate value="${zhieranswer.latestUpdateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
+    <h6 style="color:blueviolet">回答于：<fmt:formatDate value="${zhieranswer.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+    <h6 style="color:blueviolet">最近更新时间：<fmt:formatDate value="${zhieranswer.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
     <a class="btn btn-primary btn-large" data-toggle="modal" href="#updateAnswer" id="updateAnswerBtn">修改回答</a>
+    <br/>
+    <br/>
+    <ul class="nav nav-pills" >
+        <li id="praiseli">
+            <a class="btn" id="praise" > <span  id="praisespan" class="badge pull-right">${likenum}</span> 赞</a>
+        </li>
+        <li id="opposeli">
+            <a class="btn" id="oppose" > <span  id="opposespan" class="badge pull-right">${dislikenum}</span> 反对</a>
+        </li>
+
+    </ul>
     <hr />
 
 
@@ -171,6 +182,21 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#updateAnswerBtn').hide();
+//        $('#praiseli').removeClass('active');
+//        $('#opposeli').removeClass('active');
+
+        $.post('/zhier/ifshowlike',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId}},function (result) {
+            if(result && result['data'] == 1){
+                $('#praiseli').addClass('active');
+                return;
+            }else
+            if(result && result['data'] == 0){
+                $('#opposeli').addClass('active');
+                return;
+            }
+            else return;
+        });
+
 
         $('#btnRaiseQ').click(function(){
             if(checkIfRight()){
@@ -214,6 +240,90 @@
 
         });
 
+
+        $('#praise').click(function () {
+            var num;
+            $.post('/zhier/ifshowlike',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId}},function (result) {
+                if(result && result['data'] == 1){
+                    $.post('/zhier/likeorother',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId},type:-1},function (result) {
+                        if(result && result['result'] == true){
+                            $('#praiseli').removeClass('active');
+                            num = $('#praisespan').html()-1;
+                            $('#praisespan').html(num);
+
+                        }
+                    });
+                    return;
+
+                }
+                if(result && result['data'] == 0){
+                    $.post('/zhier/likeorother',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId},type:1},function (result) {
+                        if(result && result['result'] == true){
+                            $('#praiseli').addClass('active');
+                            $('#opposeli').removeClass('active');
+                            num = $('#opposespan').html()-1;
+                            $('#opposespan').html(num);
+                            num =$('#praisespan').html()-1+2;
+                            $('#praisespan').html(num);
+                        }
+                    });
+                    return;
+
+                }
+                if(result && result['data'] == -1){
+                    $.post('/zhier/likeorother',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId},type:1},function (result) {
+                        if(result && result['result'] == true){
+                            $('#praiseli').addClass('active');
+                            num =$('#praisespan').val()-1+2;
+                            $('#praisespan').html(num);
+                        }
+                    });
+                    return;
+
+                }
+            });
+        });
+
+        $('#oppose').click(function () {
+            var num;
+            $.post('/zhier/ifshowlike',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId}},function (result) {
+                if(result && result['data'] == 0){
+                    $.post('/zhier/likeorother',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId},type:-1},function (result) {
+                        if(result && result['result'] == true){
+                            $('#opposeli').removeClass('active');
+                            num = $('#opposespan').html()-1;
+                            $('#opposespan').html(num);
+                        }
+                    });
+                    return;
+                }
+                if(result && result['data'] == 1){
+                    $.post('/zhier/likeorother',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId},type:0},function (result) {
+                        if(result && result['result']== true){
+                            $('#opposeli').addClass('active');
+                            $('#praiseli').removeClass('active');
+                            num = $('#praisespan').html()-1;
+                            $('#praisespan').html(num);
+                            num =$('#opposespan').html()-1+2;
+                            $('#opposespan').html(num);
+                        }
+                    });
+                    return;
+                }
+
+                if(result && result['data'] == -1){
+                    $.post('/zhier/likeorother',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId},type:0},function (result) {
+                        if(result && result['result']==true){
+                            $('#opposeli').addClass('active');
+                            num = $('#opposespan').html()-1+2;
+                            $('#opposespan').html(num);
+                        }
+                    });
+                    return;
+                }
+
+            });
+        });
 
 
     });

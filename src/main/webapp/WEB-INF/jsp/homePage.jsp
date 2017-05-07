@@ -120,12 +120,12 @@ a.answer:hover{
                 </h1>
                 <br/>
                 <br/>
-                <p>
+                <h2>
                     <b><a style="color:black" href="/zhier/${qandanswer.userId}/user">${qandanswer.userName}</a></b>
-                </p>
-                <p>
+                </h2>
+                <h3>
                     <a class="answer" style="color:black" href="/zhier/${qandanswer.questionId}/question/${qandanswer.answerId}/answer">${fn:substring(qandanswer.answerText,0,60)}...</a>
-                </p>
+                </h3>
 
             </div>
 </c:forEach>

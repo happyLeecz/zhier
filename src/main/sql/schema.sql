@@ -45,4 +45,11 @@ CREATE TABLE answers(
   PRIMARY KEY (answer_id),
   KEY idx_question_id(question_id),
   KEY idx_user_id(user_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '回答表'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '回答表';
+
+CREATE TABLE answerlikeabout(
+  `answer_id`INT(10) NOT NULL COMMENT '回答id',
+  `user_id`INT(10) NOT NULL COMMENT '点赞用户id',
+  `types` INT(1) NOT NULL DEFAULT -1 COMMENT '赞同或反对,赞成 1，反对 0，默认-1',
+  PRIMARY KEY (answer_id,user_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '回答的喜爱程度';

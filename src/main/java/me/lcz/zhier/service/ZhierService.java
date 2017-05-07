@@ -1,9 +1,6 @@
 package me.lcz.zhier.service;
 
-import me.lcz.zhier.entity.QuestionAndaAnswer;
-import me.lcz.zhier.entity.ZhierAnswer;
-import me.lcz.zhier.entity.ZhierQuestion;
-import me.lcz.zhier.entity.ZhierUser;
+import me.lcz.zhier.entity.*;
 
 import java.util.List;
 
@@ -38,6 +35,12 @@ public interface ZhierService {
     //tag about
     void addTag(String tagName);
     List<String> findTagByKeyword(String keyword);
+  //like about
+  AnswerLikeAbout findUserLikes(long answerId,long userId);
+  void addLikes(long answerId,long userId,int type);
+  void updateLikes(long answerId,long userId,int type);
+  int getLikesNum(long answerId,int type);
+
 
 
 }

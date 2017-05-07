@@ -120,9 +120,9 @@
                         <h2>
                             <a href="/zhier/${answer.questionId}/question">${answer.questionText}</a>
                         </h2>
-                        <p>
+                        <h3>
                                 ${fn:substring(answer.answerText,0,60)}...<a class="btn" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer">查看回答 »</a>
-                        </p>
+                        </h3>
                         <hr/>
                     </div>
                     </c:forEach>
@@ -134,8 +134,8 @@
                         <h2>
                             <a href="/zhier/${question.questionId}/question">${question.questionText}</a>
                         </h2>
-                     <h6>发布于：<fmt:formatDate value="${question.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
-                     <h6>最近更新时间：<fmt:formatDate value="${question.latestUpdateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </h6>
+                     <h6>发布于：<fmt:formatDate value="${question.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                     <h6>最近更新时间：<fmt:formatDate value="${question.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
                     </div>
                      </c:forEach>
                 </div>

@@ -1,10 +1,7 @@
 package me.lcz.zhier.web;
 
 import me.lcz.zhier.dto.ActionResult;
-import me.lcz.zhier.entity.QuestionAndaAnswer;
-import me.lcz.zhier.entity.ZhierAnswer;
-import me.lcz.zhier.entity.ZhierQuestion;
-import me.lcz.zhier.entity.ZhierUser;
+import me.lcz.zhier.entity.*;
 import me.lcz.zhier.enums.TableEnum;
 import me.lcz.zhier.service.ZhierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,8 +85,19 @@ public class ZhierController {
     public String toQuestionPage(@PathVariable("questionId") long questionId, Model model) {
         ZhierQuestion zhierQuestion = zhierService.getQuestionById(questionId);
         List<ZhierAnswer> zhierAnswerList = zhierService.getAnswerByQuestion(questionId);
+        List<Integer> likes = new ArrayList<Integer>();
+        List<Integer> dislikes = new ArrayList<Integer>();
+        int likenum,dislikenum;
+        for(ZhierAnswer a : zhierAnswerList){
+           likenum = zhierService.getLikesNum(a.getAnswerId(),1);
+            dislikenum = zhierService.getLikesNum(a.getAnswerId(),0);
+            likes.add(likenum);
+            dislikes.add(dislikenum);
+        }
         model.addAttribute("zhierquestion", zhierQuestion);
         model.addAttribute("answers", zhierAnswerList);
+        model.addAttribute("likenums",likes);
+        model.addAttribute("dislikenums",dislikes);
         return "questionDetail";
     }
 
@@ -142,8 +151,12 @@ public class ZhierController {
                                Model model) {
         ZhierAnswer zhierAnswer = zhierService.getAnswerById(answerId);
         ZhierQuestion zhierQuestion = zhierService.getQuestionById(questionId);
+        int likenum = zhierService.getLikesNum(answerId,1);
+        int dislikenum = zhierService.getLikesNum(answerId,0);
         model.addAttribute("zhieranswer", zhierAnswer);
         model.addAttribute("zhierquestion", zhierQuestion);
+        model.addAttribute("likenum",likenum);
+        model.addAttribute("dislikenum",dislikenum);
         return "answerPage";
     }
 
@@ -196,6 +209,36 @@ public class ZhierController {
         List<ZhierQuestion> questions = zhierService.getQuestionByTag(tagName);
         model.addAttribute("questions",questions);
         return "questionsByTag";
+    }
+    @RequestMapping(value = "/ifshowlike",
+              method = RequestMethod.POST,
+          produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult findLikes(@RequestParam(value = "answerId") long answerId,
+                                  @RequestParam(value = "userId") long userId){
+
+        AnswerLikeAbout likeAbout = zhierService.findUserLikes(answerId, userId);
+        if(likeAbout == null || likeAbout.getTypes() == -1)
+            return new ActionResult(TableEnum.LIKES.getWhichTable(),-1);
+        else
+            return new ActionResult(TableEnum.LIKES.getWhichTable(),likeAbout.getTypes());
+
+    }
+
+    @RequestMapping(value = "/likeorother",
+                    method = RequestMethod.POST,
+                produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult likeOrOther(@RequestParam(value = "answerId") long answerId,
+                            @RequestParam(value = "userId") long userId,
+                            @RequestParam(value = "type") int type){
+        AnswerLikeAbout about = zhierService.findUserLikes(answerId, userId);
+        if(about == null)
+            zhierService.addLikes(answerId, userId, type);
+        else
+            zhierService.updateLikes(answerId, userId, type);
+
+        return new ActionResult(TableEnum.LIKES.getWhichTable(),true);
     }
 
 }
