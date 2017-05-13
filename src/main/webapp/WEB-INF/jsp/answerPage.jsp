@@ -72,7 +72,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="newAnswerText">问题内容</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control " rows="8" id="newAnswerText" name="newAnswerText">${zhieranswer.answerText}</textarea>
+                            <textarea class="form-control " rows="8" id="newAnswerText" name="newAnswerText"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -220,6 +220,7 @@
 
 
         $('#btnUpdateA').click(function(){
+            if($('#newAnswerText').val()!=''){
             var url='/zhier/'+ ${zhierquestion.questionId} + '/question/' + ${zhieranswer.answerId} +'/updateA';
             $.post(url,{newAnswerText:$('#newAnswerText').val()},function (result) {
                         if(result && result['result']){
@@ -230,7 +231,11 @@
                             alert("抱歉，提交未成功");
                         }
                     }
-            );
+            );}else return false;
+        });
+
+        $('#updateAnswerBtn').click(function () {
+            $('#newAnswerText').html('${zhieranswer.answerText}');
         });
 
         $(function () {
@@ -274,7 +279,7 @@
                     $.post('/zhier/likeorother',{answerId:${zhieranswer.answerId},userId:${zhieruser.userId},type:1},function (result) {
                         if(result && result['result'] == true){
                             $('#praiseli').addClass('active');
-                            num =$('#praisespan').val()-1+2;
+                            num =$('#praisespan').html()-1+2;
                             $('#praisespan').html(num);
                         }
                     });
@@ -324,8 +329,6 @@
 
             });
         });
-
-
     });
 
     function checkIfRight() {
@@ -338,7 +341,6 @@
         }
         return result;
     }
-
 
 
 

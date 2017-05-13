@@ -104,13 +104,16 @@
             <br/>
             <br/>
             <h1>
-                ${toseeuser.userName}
+                ${toseeuser.userName}<button id="followBtn" class="btn" ></button>
             </h1>
-
+            <br/>
+            <br/>
             <ul class="nav nav-tabs" id="myTab">
                 <li class="active"><a href="#answers" data-toggle="tab">回答</a></li>
                 <li><a href="#Questions" data-toggle="tab">提问</a></li>
-
+                <li><a href="#following" data-toggle="tab">关注的人</a></li>
+                <li><a href="#follower" data-toggle="tab">谁关注他</a></li>
+                <li><a href="#concernedQuestion" data-toggle="tab">关注的问题</a></li>
             </ul>
              
             <div class="tab-content">
@@ -128,6 +131,7 @@
                     </c:forEach>
 
                 </div>
+
                 <div class="tab-pane" id="Questions">
                  <c:forEach var="question" items="${toseeUserQuestions}">
                     <div class="jumbotron">
@@ -139,6 +143,36 @@
                     </div>
                      </c:forEach>
                 </div>
+
+                <div class="tab-pane" id="following">
+                    <c:forEach var="fing" items="${following}">
+                        <div class="jumbotron">
+                                <a href="/zhier/${fing.userId}/user">${fing.userName}</a>
+                        </div>
+                    </c:forEach>
+
+                </div>
+
+                <div class="tab-pane" id="follower">
+                        <c:forEach var="fer" items="${follower}">
+                            <div class="jumbotron">
+                                <a href="/zhier/${fer.userId}/user">${fer.userName}</a>
+                            </div>
+                        </c:forEach>
+                </div>
+
+                <div class="tab-pane" id="concernedQuestion">
+                    <c:forEach var="que" items="${concernedQ}">
+                        <div class="jumbotron">
+                            <h2>
+                                <a href="/zhier/${que.questionId}/question">${que.questionText}</a>
+                            </h2>
+                            <h6>发布于：<fmt:formatDate value="${que.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                            <h6>最近更新时间：<fmt:formatDate value="${que.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                        </div>
+                    </c:forEach>
+                </div>
+
             </div>
         </div>
 
@@ -155,6 +189,47 @@
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#followBtn').hide();
+        if(${zhieruser.userId} == ${toseeuser.userId});
+else{
+            $('#followBtn').show();
+        $.post('/zhier/iffollow',{userId:${zhieruser.userId},followingId:${toseeuser.userId}},function (result) {
+            if(result && result['result']==true){
+                $('#followBtn').removeClass('btn-primary');
+                $('#followBtn').addClass('btn-default');
+                $('#followBtn').text('正在关注');
+            }else{
+                $('#followBtn').removeClass('btn-default');
+                $('#followBtn').addClass('btn-primary');
+                $('#followBtn').text('关注');
+            }
+        });
+
+        $('#followBtn').click(function () {
+            $.post('/zhier/iffollow',{userId:${zhieruser.userId},followingId:${toseeuser.userId}},function (result) {
+                if(result && result['result']==true){
+                    $.post('/zhier/followordelete',{userId:${zhieruser.userId},followingId:${toseeuser.userId},type:0},function (result2) {
+                        if(result2 && result2['result']==true) {
+                            $('#followBtn').removeClass('btn-default');
+                            $('#followBtn').addClass('btn-primary');
+                            $('#followBtn').text('关注');
+                        }
+                    });
+                }else{
+                    $.post('/zhier/followordelete',{userId:${zhieruser.userId},followingId:${toseeuser.userId},type:1},function (result3) {
+                        if(result3 && result3['result']==true) {
+                            $('#followBtn').removeClass('btn-primary');
+                            $('#followBtn').addClass('btn-default');
+                            $('#followBtn').text('正在关注');
+                        }
+                    });
+                }
+            });
+        });
+        }
+
+
+
         $('#btnRaiseQ').click(function(){
             if(checkIfRight()){
                 $.post('/zhier/raiseQuestion',{questionTag:$('#questionTag').val(),
@@ -193,5 +268,8 @@
         else
             return true;
     }
+
+
+
 </script>
 </html>

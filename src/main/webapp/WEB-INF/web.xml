@@ -18,7 +18,7 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-
+<!--字符编码过滤器，通过servlet提交的请求默认是GBK的编码，中文就会乱码，所以的设置一个过滤器将编码改变过来-->
   <filter>
     <filter-name>characterEncodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -35,6 +35,8 @@
     <filter-name>characterEncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <!--设置404页面-->
   <error-page>
     <error-code>404</error-code>
     <location>/WEB-INF/jsp/404.jsp</location>

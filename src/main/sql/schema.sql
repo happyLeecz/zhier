@@ -52,4 +52,16 @@ CREATE TABLE answerlikeabout(
   `user_id`INT(10) NOT NULL COMMENT '点赞用户id',
   `types` INT(1) NOT NULL DEFAULT -1 COMMENT '赞同或反对,赞成 1，反对 0，默认-1',
   PRIMARY KEY (answer_id,user_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '回答的喜爱程度';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '回答的喜爱程度表';
+
+CREATE TABLE followabout(
+  `follower_id` INT(10) NOT NULL COMMENT '谁关注，id',
+  `following_id`INT(10) NOT NULL COMMENT '关注谁，id',
+  PRIMARY KEY (follower_id,following_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '用户关注表';
+
+CREATE TABLE concernquestion(
+  `user_id` INT(10) NOT NULL COMMENT '用户id',
+  `question_id`INT(10) NOT NULL COMMENT '问题id',
+  PRIMARY KEY (user_id,question_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '问题关注表';

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.lcz.zhier.dao.ConcernQuestionDao">
+
+<select id="queryConcernInfo" resultType="ConcernQuestion">
+    SELECT *
+    FROM concernquestion
+    WHERE user_id=#{userId} AND question_id=#{questionId}
+</select>
+
+    <insert id="addConcernInfo">
+        insert into concernquestion(user_id,question_id)
+         values (#{userId},#{questionId});
+    </insert>
+
+    <delete id="deleteConcernInfo">
+        DELETE FROM concernquestion
+        WHERE user_id=#{userId} AND question_id=#{questionId}
+    </delete>
+
+    <select id="queryConcernedQuestion" resultType="ZhierQuestion">
+        SELECT *
+        FROM questions
+        WHERE question_id IN (
+        SELECT question_id
+        FROM concernquestion
+        WHERE user_id=#{userId}
+        )
+    </select>
+
+
+    </mapper>

@@ -8,7 +8,9 @@ public enum TableEnum {
     ANSWERS("回答表"),
     QUESTIONS("问题表"),
     TAGS("问题标签表"),
-    LIKES("回答的喜爱程度表");
+    LIKES("回答的喜爱程度表"),
+    FOLLOWS("用户关注表"),
+    CONCERN("问题关注表");
 
 
     private String whichTable;

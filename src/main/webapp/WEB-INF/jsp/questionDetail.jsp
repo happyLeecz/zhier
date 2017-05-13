@@ -74,7 +74,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="newQuestionText">问题内容</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control " rows="8" id="newQuestionText" name="newQuestionText">${zhierquestion.questionText}</textarea>
+                            <textarea class="form-control " rows="8" id="newQuestionText" name="newQuestionText"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -165,6 +165,9 @@
             <br/>
             <br/>
             <div class="jumbotron">
+                <button id="concernqBtn" class="btn pull-right" ></button>
+                <br/>
+                <br/>
                 <span class="label label-primary" ><a style="color:white" href="/zhier/${zhierquestion.questionTag}/questionsByTag">${zhierquestion.questionTag}</a> </span>
                 <h1 style="color: blueviolet">
                     ${zhierquestion.questionText}
@@ -193,10 +196,10 @@
     <h6 style="color:blueviolet">最近更新时间：<fmt:formatDate value="${answer.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/></h6>
     <ul class="nav nav-pills" >
         <li >
-            <a class="btn disabled"  > <span   class="badge pull-right">${likenums[a.index]}</span> 赞</a>
+            <a class="disabled"  > <span   class="badge pull-right">${likenums[a.index]}</span> 赞</a>
         </li>
         <li >
-            <a class="btn disabled"  > <span   class="badge pull-right">${dislikenums[a.index]}</span> 反对</a>
+            <a class="disabled"  > <span   class="badge pull-right">${dislikenums[a.index]}</span> 反对</a>
         </li>
 
     </ul>
@@ -225,6 +228,46 @@
 
         });
 
+        $.post('/zhier/ifconcern',{userId:${zhieruser.userId},questionId:${zhierquestion.questionId}},function (result) {
+            if(result && result['result'] == true){
+                $('#concernqBtn').removeClass('btn-primary');
+                $('#concernqBtn').addClass('btn-default');
+                $('#concernqBtn').text('正在关注');
+            }else{
+                $('#concernqBtn').removeClass('btn-default');
+                $('#concernqBtn').addClass('btn-primary');
+                $('#concernqBtn').text('关注该问题');
+            }
+        });
+        $('#concernqBtn').click(function () {
+           $.post('/zhier/ifconcern',{userId:${zhieruser.userId},questionId:${zhierquestion.questionId}},function (result) {
+              if(result && result['result'] == true){
+                  $.post('/zhier/concernordelete',{userId:${zhieruser.userId},questionId:${zhierquestion.questionId},type:0},function (result2) {
+                     if(result2 && result2['result'] == true){
+                         $('#concernqBtn').removeClass('btn-default').addClass('btn-primary').text('关注该问题');
+                     }
+                  });
+              }else{
+                  $.post('/zhier/concernordelete',{userId:${zhieruser.userId},questionId:${zhierquestion.questionId},type:1},function (result3) {
+                      if(result3 && result3['result'] == true){
+                          $('#concernqBtn').removeClass('btn-primary').addClass('btn-default').text('正在关注');
+                      }
+                  });
+              }
+
+           });
+        });
+
+
+        $(function () {
+            var userId = ${zhieruser.userId},createUserId=${zhierquestion.createUserId},
+                    userAuthority = ${zhieruser.userAuthority};
+            if(userId == createUserId ){
+                $('#updateQuestionBtn').show();
+            }
+
+        });
+
 
 
 //为提问的提交按钮提供点击事件
@@ -249,6 +292,9 @@
 
 
         $('#btnUpdateQ').click(function(){
+            if($('#newQuestionText').val() == '' )
+                    return false;
+            else{
            var url='/zhier/'+ ${zhierquestion.questionId} + '/updateQ';
                 $.post(url,{newQuestionText:$('#newQuestionText').val()},function (result) {
                             if(result && result['result']){
@@ -260,11 +306,18 @@
                             }
                         }
                 );
+            }
         });
+
+        $('#updateQuestionBtn').click(function () {
+            $('#newQuestionText').val('${zhierquestion.questionText}');
+        });
+
  //点击回答问题的提交按钮就可以提交问题回答
         $('#btnAnswerQ').click(function(){
+            if($('#answerText').val()!=''){
             var url='/zhier/'+ ${zhierquestion.questionId} +'/answerQ';
-            var userId =${zhieruser.userId} , userName = ${zhieruser.userName}
+            var userId =${zhieruser.userId} , userName = '${zhieruser.userName}';
             $.post(url,{questionId:${zhierquestion.questionId}, userId:userId , userName:userName , answerText:$('#answerText').val()},function (result) {
                         if(result && result['result']){
                             $('#answerQuestion').modal('hide');
@@ -275,8 +328,9 @@
                             alert("抱歉，提交未成功");
                         }
                     }
-            );
+            );}else return false;
         });
+
     });
 
 
@@ -294,14 +348,7 @@
     }
 
 
-    $(function () {
-        var userId = ${zhieruser.userId},createUserId=${zhierquestion.createUserId},
-                userAuthority = ${zhieruser.userAuthority};
-        if(userId == createUserId ){
-            $('#updateQuestionBtn').show();
-        }
 
-    });
 
     function check() {
         if($('#searchText').val()=='')
@@ -309,6 +356,9 @@
         else
             return true;
     }
+
+
+
 </script>
 
 </body>

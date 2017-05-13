@@ -77,6 +77,12 @@ public class ZhierController {
         model.addAttribute("toseeUserAnswers", questionAndaAnswers);
         List<ZhierQuestion> zhierQuestions = zhierService.getQuestionByUser(userId);
         model.addAttribute("toseeUserQuestions", zhierQuestions);
+        List<ZhierUser> follower = zhierService.getFollower(userId);
+        model.addAttribute("follower",follower);
+        List<ZhierUser> following = zhierService.getFollowing(userId);
+        model.addAttribute("following",following);
+        List<ZhierQuestion> concernedQuestion = zhierService.getConcernedQuestion(userId);
+        model.addAttribute("concernedQ",concernedQuestion);
         return "userDetail";
     }
 
@@ -111,8 +117,8 @@ public class ZhierController {
                                       @RequestParam(value = "questionTag") String questionTag,
                                       @RequestParam(value = "questionText") String questionText
     ) {
-
-        boolean isSuccess = zhierService.raiseQuestion(createUserId, createUserName, questionTag, questionText);
+        String finalText = questionText.replaceAll("\\n","<br/>");
+        boolean isSuccess = zhierService.raiseQuestion(createUserId, createUserName, questionTag, finalText);
         return new ActionResult(TableEnum.QUESTIONS.getWhichTable(), isSuccess);
     }
 
@@ -123,7 +129,8 @@ public class ZhierController {
     @ResponseBody
     public ActionResult updateQuestion(@PathVariable(value = "questionId") long questionId,
                                        @RequestParam(value = "newQuestionText") String newQuestionText) {
-        boolean isSuccess = zhierService.updateQuestion(questionId, newQuestionText);
+        String finalText = newQuestionText.replaceAll("\\n","<br/>");
+        boolean isSuccess = zhierService.updateQuestion(questionId, finalText);
         return new ActionResult(TableEnum.QUESTIONS.getWhichTable(), isSuccess);
     }
 
@@ -139,7 +146,8 @@ public class ZhierController {
         if (userId == null) {
             return new ActionResult(null, false);
         } else {
-            boolean isSuccess = zhierService.answer(questionId, userId, userName, answerText);
+            String finalText = answerText.replaceAll("\\n","<br/>");
+            boolean isSuccess = zhierService.answer(questionId, userId, userName, finalText);
             return new ActionResult(TableEnum.ANSWERS.getWhichTable(), isSuccess);
         }
     }
@@ -166,7 +174,8 @@ public class ZhierController {
     @ResponseBody
     public ActionResult updateAnswer(@PathVariable(value = "answerId") long answerId,
                                      @RequestParam(value = "newAnswerText") String newAnswerText) {
-        boolean isSuccess = zhierService.updateAnswer(answerId, newAnswerText);
+        String finalText = newAnswerText.replaceAll("\\n","<br/>");
+        boolean isSuccess = zhierService.updateAnswer(answerId, finalText);
         return new ActionResult(TableEnum.ANSWERS.getWhichTable(), isSuccess);
     }
 
@@ -241,4 +250,70 @@ public class ZhierController {
         return new ActionResult(TableEnum.LIKES.getWhichTable(),true);
     }
 
+
+    @RequestMapping(value = "/iffollow",
+            method = RequestMethod.POST,
+            produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult findIfFollow(@RequestParam(value = "userId") long userId,
+                                  @RequestParam(value = "followingId") long followingId){
+
+        FollowAbout followAbout = zhierService.findFollowInfo(userId, followingId);
+        if(followAbout == null)
+            return new ActionResult(TableEnum.FOLLOWS.getWhichTable(),false);
+        else
+            return new ActionResult(TableEnum.FOLLOWS.getWhichTable(),true);
+    }
+
+    @RequestMapping(value = "/followordelete",
+            method = RequestMethod.POST,
+            produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult deleteFollowInfo(@RequestParam(value = "userId") long userId,
+                                     @RequestParam(value = "followingId") long followingId,
+                                         @RequestParam(value = "type") int type){
+        if(type==1) {
+    boolean ifSuccess = zhierService.follow(userId, followingId);
+    return new ActionResult(TableEnum.FOLLOWS.getWhichTable(), ifSuccess);
+        }
+        else{
+            boolean ifSuccess = zhierService.deleteFollowInfo(userId, followingId);
+            return new ActionResult(TableEnum.FOLLOWS.getWhichTable(), ifSuccess);
+        }
+    }
+
+
+
+
+    @RequestMapping(value = "/ifconcern",
+            method = RequestMethod.POST,
+            produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult findIfConcern(@RequestParam(value = "userId") long userId,
+                                      @RequestParam(value = "questionId") long questionId){
+
+      ConcernQuestion concernQuestion = zhierService.getConcernInfo(userId, questionId);
+        if(concernQuestion == null)
+            return new ActionResult(TableEnum.CONCERN.getWhichTable(),false);
+        else
+            return new ActionResult(TableEnum.CONCERN.getWhichTable(),true);
+    }
+
+
+    @RequestMapping(value = "/concernordelete",
+            method = RequestMethod.POST,
+            produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult concernordelete(@RequestParam(value = "userId") long userId,
+                                         @RequestParam(value = "questionId") long questionId,
+                                         @RequestParam(value = "type") int type){
+        if(type==1) {
+            boolean ifSuccess = zhierService.addConcernInfo(userId, questionId);
+            return new ActionResult(TableEnum.CONCERN.getWhichTable(), ifSuccess);
+        }
+        else{
+            boolean ifSuccess = zhierService.deleteConcernInfo(userId, questionId);
+            return new ActionResult(TableEnum.CONCERN.getWhichTable(), ifSuccess);
+        }
+    }
 }

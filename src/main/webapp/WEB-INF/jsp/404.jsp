@@ -57,7 +57,7 @@
 
             <div class="jumbotron">
                 <h1 style="text-align:center">WE GOT LOST</h1>
-                <h3 style="text-align:center">HOW ABOUT HAVE A MUSIC</h3>
+                <h3 style="text-align:center">HOW ABOUT HAVE A SONG</h3>
                 <div align="center">
                     <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1821593&auto=1&height=66"></iframe></div>
                 <br/>

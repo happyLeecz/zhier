@@ -40,6 +40,18 @@ public interface ZhierService {
   void addLikes(long answerId,long userId,int type);
   void updateLikes(long answerId,long userId,int type);
   int getLikesNum(long answerId,int type);
+  //follow about
+     boolean follow(long userId,long followingId);
+     List<ZhierUser> getFollower(long userId);
+     List<ZhierUser> getFollowing(long userId);
+     boolean deleteFollowInfo(long userId,long followingId);
+     FollowAbout findFollowInfo(long userId,long followingId);
+  //concern question about
+      ConcernQuestion getConcernInfo(long userId,long questionId);
+      boolean addConcernInfo(long userId,long questionId);
+      boolean deleteConcernInfo(long userId,long questionId);
+      List<ZhierQuestion> getConcernedQuestion(long userId);
+
 
 
 

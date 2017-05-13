@@ -24,6 +24,10 @@ public class ZhierServiceImpl implements ZhierService {
     private ZhierQuestionTagDao zhierQuestionTagDao;
     @Autowired
     private AnswerLikeAboutDao answerLikeAboutDao;
+    @Autowired
+    private FollowAboutDao followAboutDao;
+    @Autowired
+    private ConcernQuestionDao concernQuestionDao;
 
     public List<ZhierAnswer> getAnswerByQuestion(long questionId) {
         return zhierAnswerDao.queryAllByQuestion(questionId);
@@ -176,6 +180,56 @@ public class ZhierServiceImpl implements ZhierService {
 
     public int getLikesNum(long answerId, int type) {
         return answerLikeAboutDao.queryInfoNum(answerId, type);
+    }
+
+    public boolean follow(long userId, long followingId) {
+        if(followAboutDao.addFollowInfo(userId, followingId) == 0)
+            return false;
+        else
+            return true;
+    }
+
+    public List<ZhierUser> getFollower(long userId) {
+        return followAboutDao.queryFollower(userId);
+    }
+
+    public List<ZhierUser> getFollowing(long userId) {
+        return followAboutDao.queryFollowing(userId);
+    }
+
+    public boolean deleteFollowInfo(long userId, long followingId) {
+        if(followAboutDao.deleteFollowingInfo(userId, followingId)==0)
+        return false;
+
+        else
+            return true;
+    }
+
+    public FollowAbout findFollowInfo(long userId, long followingId) {
+        return followAboutDao.queryFollowInfo(userId, followingId);
+    }
+
+
+    public ConcernQuestion getConcernInfo(long userId, long questionId) {
+        return concernQuestionDao.queryConcernInfo(userId, questionId);
+    }
+
+    public boolean addConcernInfo(long userId, long questionId) {
+        if(concernQuestionDao.addConcernInfo(userId, questionId)==0)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean deleteConcernInfo(long userId, long questionId) {
+        if(concernQuestionDao.deleteConcernInfo(userId, questionId)==0)
+        return false;
+        else
+            return true;
+    }
+
+    public List<ZhierQuestion> getConcernedQuestion(long userId) {
+        return concernQuestionDao.queryConcernedQuestion(userId);
     }
 }
 
