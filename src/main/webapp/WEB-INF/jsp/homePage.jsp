@@ -113,22 +113,32 @@ a.answer:hover{
             <br/>
             <br/>
 <c:forEach var="qandanswer" items="${qandanswers}">
-            <div class="jumbotron">
+            <div>
                 <span class="label label-primary" ><a style="color:white" href="/zhier/${qandanswer.questionTag}/questionsByTag">${qandanswer.questionTag}</a> </span>
                 <h1>
                     <a  style="color:blueviolet" href="/zhier/${qandanswer.questionId}/question">${qandanswer.questionText}</a>
                 </h1>
-                <br/>
-                <br/>
+
                 <h2>
                     <b><a style="color:black" href="/zhier/${qandanswer.userId}/user">${qandanswer.userName}</a></b>
                 </h2>
-                <h3>
-                    <a class="answer" style="color:black" href="/zhier/${qandanswer.questionId}/question/${qandanswer.answerId}/answer">${fn:substring(qandanswer.answerText,0,60)}...</a>
-                </h3>
-
+                <h4>
+                    <a class="answer" style="color:black" href="/zhier/${qandanswer.questionId}/question/${qandanswer.answerId}/answer">
+                        <c:if test="${fn:length(qandanswer.answerText) > 60}">
+                            <h3>${fn:substring(qandanswer.answerText,0,60)}...</h3>
+                        </c:if>
+                        <c:if test="${fn:length(qandanswer.answerText) <= 60}">
+                            <h3>${qandanswer.answerText}</h3>
+                        </c:if>
+                    </a>
+                </h4>
             </div>
+    <hr/>
 </c:forEach>
+            <a href="/zhier/test">测试</a>
+
+          <h1>Zhier</h1>
+            <h6>Designed by <a href="https://github.com/happyLeecz">CZ</a></h6>
 
         </div>
 

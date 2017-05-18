@@ -137,9 +137,9 @@
                 </h1>
                 <br/>
                 <br/>
-                <h6>发布人：<a style="color:blueviolet" href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h6>
-                <h6>发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
-                <h6>最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                <h5>发布人：<a style="color:blueviolet" href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h5>
+                <h5>发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
+                <h5>最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
             </div>
         </div>
     </div>
@@ -147,13 +147,13 @@
     <h2>
         <a style="color:black" href="/zhier/${zhieranswer.userId}/user">${zhieranswer.userName}</a>
     </h2>
-    <h3>
+    <h4>
         ${zhieranswer.answerText}
-       </h3>
+       </h4>
     <br/>
 
-    <h6 style="color:blueviolet">回答于：<fmt:formatDate value="${zhieranswer.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
-    <h6 style="color:blueviolet">最近更新时间：<fmt:formatDate value="${zhieranswer.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+    <h5 style="color:blueviolet">回答于：<fmt:formatDate value="${zhieranswer.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
+    <h5 style="color:blueviolet">最近更新时间：<fmt:formatDate value="${zhieranswer.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
     <a class="btn btn-primary btn-large" data-toggle="modal" href="#updateAnswer" id="updateAnswerBtn">修改回答</a>
     <br/>
     <br/>
@@ -164,9 +164,14 @@
         <li id="opposeli">
             <a class="btn" id="oppose" > <span  id="opposespan" class="badge pull-right">${dislikenum}</span> 反对</a>
         </li>
-
+         <li>
+             <a href="/zhier/${zhierquestion.questionId}/question/${zhieranswer.answerId}/answer/comment">评论(${commentnum})</a>
+         </li>
     </ul>
     <hr />
+    <h1>Zhier</h1>
+    <h6>Designed by <a href="https://github.com/happyLeecz">CZ</a></h6>
+
 
 
 

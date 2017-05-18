@@ -51,6 +51,10 @@ public interface ZhierService {
       boolean addConcernInfo(long userId,long questionId);
       boolean deleteConcernInfo(long userId,long questionId);
       List<ZhierQuestion> getConcernedQuestion(long userId);
+    //answerCommentAbout
+    List<AnswerComment> getAnswerComment(long answerId);
+    boolean addCommentOnAnswer(long answerId,long commentUserId,String commentText);
+    boolean addCommentOnComment(long answerId,long commentUserId,long commenttoUserId,String commentText);
 
 
 

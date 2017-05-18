@@ -93,17 +93,24 @@ public class ZhierController {
         List<ZhierAnswer> zhierAnswerList = zhierService.getAnswerByQuestion(questionId);
         List<Integer> likes = new ArrayList<Integer>();
         List<Integer> dislikes = new ArrayList<Integer>();
-        int likenum,dislikenum;
+        List<Integer> commentNumbers = new ArrayList<Integer>();
+        int likenum,dislikenum,commentnum;
         for(ZhierAnswer a : zhierAnswerList){
            likenum = zhierService.getLikesNum(a.getAnswerId(),1);
             dislikenum = zhierService.getLikesNum(a.getAnswerId(),0);
             likes.add(likenum);
             dislikes.add(dislikenum);
+            commentnum = zhierService.getAnswerComment(a.getAnswerId()).size();
+            commentNumbers.add(commentnum);
         }
         model.addAttribute("zhierquestion", zhierQuestion);
         model.addAttribute("answers", zhierAnswerList);
         model.addAttribute("likenums",likes);
         model.addAttribute("dislikenums",dislikes);
+
+        int answerNumber = zhierAnswerList.size();
+        model.addAttribute("answerNumber",answerNumber);
+        model.addAttribute("commentNumbers",commentNumbers);
         return "questionDetail";
     }
 
@@ -165,6 +172,10 @@ public class ZhierController {
         model.addAttribute("zhierquestion", zhierQuestion);
         model.addAttribute("likenum",likenum);
         model.addAttribute("dislikenum",dislikenum);
+
+        int commentnum = zhierService.getAnswerComment(answerId).size();
+        model.addAttribute("commentnum",commentnum);
+
         return "answerPage";
     }
 
@@ -315,5 +326,45 @@ public class ZhierController {
             boolean ifSuccess = zhierService.deleteConcernInfo(userId, questionId);
             return new ActionResult(TableEnum.CONCERN.getWhichTable(), ifSuccess);
         }
+    }
+    @RequestMapping(value = "/{questionId}/question/{answerId}/answer/comment",
+    method = RequestMethod.GET)
+    public String getComments(@PathVariable(value = "answerId") long answerId,Model model){
+        List<AnswerComment> comments = zhierService.getAnswerComment(answerId);
+        model.addAttribute("comments",comments);
+        model.addAttribute("answerId",answerId);
+        return "comment";
+    }
+
+    @RequestMapping(value = "/comment",
+            method = RequestMethod.POST,
+            produces = {"application/json;charset=UTF-8"}
+    )
+    @ResponseBody
+    public  ActionResult comment(@RequestParam(value = "answerId") long answerId,
+                                 @RequestParam(value = "commentUserId") long commentUserId,
+                                 @RequestParam(value = "commentText") String commentText,
+                                 @RequestParam(value = "commenttoUserId") long commenttoUserId,
+                                 @RequestParam(value = "type") int type){
+        if(type == 0){
+          boolean isSuccess =  zhierService.addCommentOnAnswer(answerId,commentUserId,commentText);
+            return new ActionResult(TableEnum.COMMENT.getWhichTable(),isSuccess);
+        }else{
+            boolean isSuccess2 = zhierService.addCommentOnComment(answerId, commentUserId, commenttoUserId, commentText);
+            return new ActionResult(TableEnum.COMMENT.getWhichTable(),isSuccess2);
+        }
+    }
+
+
+
+
+
+    @RequestMapping(value = "/test",
+            method = RequestMethod.GET,
+            produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public List findIfFollow(){
+
+      return zhierService.getAllQuestion();
     }
 }

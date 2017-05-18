@@ -66,6 +66,67 @@
     </div><!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="comment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title " id="myModalLabel1">评论</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" >
+                    <br/>
+                    <br/>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="commentText">评论内容</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control " rows="8" id="commentText" name="commentText"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-3">
+                            <button id="submitcomment" class="btn btn-primary" type="button">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+
+<div class="modal fade" id="commentOnComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title " id="myModalLabel2">评论</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" >
+                    <br/>
+                    <br/>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="commentText">评论内容</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control " rows="8" id="commentText2" name="commentText"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-3">
+                            <button id="submitcomment2" class="btn btn-primary" type="button">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
 
 <div class="container">
     <div class="row clearfix">
@@ -114,55 +175,27 @@
             <br/>
             <br/>
             <br/>
+            <a class="btn btn-primary btn-large" data-toggle="modal" href="#comment" id="commentBtn">评论</a>
+            <hr>
 
-           <div id="searchResult">
-               <div id="tagResult">
-                   <h1>标签</h1>
+               <c:forEach var="comment" items="${comments}" varStatus="num">
+                   <div>
+                   <c:if test="${comment.commenttoUserId == 0}">
+               <h2><a href="/zhier/${comment.commentUserId}/user">${comment.commentUserName}</a></h2>
+                   </c:if>
+
+                   <c:if test="${comment.commenttoUserId != 0}">
+                       <h2><a href="/zhier/${comment.commentUserId}/user">${comment.commentUserName}</a>回复<a href="/zhier/${comment.commenttoUserId}/user">${comment.commenttoUserName}</a></h2>
+                   </c:if>
+                   <h4>${comment.commentText}</h4>
+                   <h6><fmt:formatDate value="${comment.createTime}" pattern="yyyy年MM月dd日 HH:mm"></fmt:formatDate></h6>
+                   <h6><a class="recomment" href="#commentOnComment" data-toggle="modal" value="${comment.commentUserId}"> 回复 </a></h6>
                    <hr/>
-                   <div class="jumbotron">
-                       <c:forEach var="tag" items="${tags}">
-                       <p><span class="label label-primary " ><a style="color:white" href="/zhier/${tag}/questionsByTag">${tag}</a></span></p>
-                       </c:forEach>
                    </div>
-               </div>
-
-               <div id="userResult">
-                   <h1>用户</h1>
-                   <hr/>
-                   <div class="jumbotron">
-                       <c:forEach var="user" items="${users}">
-                       <p><a  style="color:blueviolet" class="btn " href="/zhier/${user.userId}/user">${user.userName}</a></p>
-                       </c:forEach>
-                   </div>
-               </div>
-
-               <div id="questionResult">
-                   <h1>问题</h1>
-                   <hr/>
-                   <div class="jumbotron">
-                       <c:forEach var="question" items="${questions}">
-                       <p><a  style="color:blueviolet" class="btn " href="/zhier/${question.questionId}/question">${question.questionText}</a></p>
-                       </c:forEach>
-                   </div>
-               </div>
-           </div>
-
-            <hr/>
-            <h1>Zhier</h1>
-            <h6>Designed by <a href="https://github.com/happyLeecz">CZ</a></h6>
+               </c:forEach>
 
 
-
-
-
-
-
-
-
-
-
-
-
+            
 
         </div>
 
@@ -176,6 +209,7 @@
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        var commentUserId;
         $('#btnRaiseQ').click(function(){
             if(checkIfRight()){
                 $.post('/zhier/raiseQuestion',{questionTag:$('#questionTag').val(),
@@ -194,9 +228,37 @@
                         }
                 );}return false;
         });
+
+        $('.recomment').click(function () {
+          commentUserId = $(this).attr('value');
+        });
+        
+        $('#submitcomment').click(function () {
+            if($('#commentText').val()==''){
+                return false;
+            }else{
+            $.post('/zhier/comment',{answerId:${answerId},commentUserId:${zhieruser.userId},commenttoUserId:0,commentText:$('#commentText').val(),type:0},function (result) {
+                if(result && result['result']){
+                    window.location.reload();
+                }
+            });
+            }
+        });
+
+        $('#submitcomment2').click(function () {
+            if($('#commentText2').val()==''){
+                return false;
+            }else{
+            $.post('/zhier/comment',{answerId:${answerId},commentUserId:${zhieruser.userId},commenttoUserId:commentUserId,commentText:$('#commentText').val(),type:1},function (result) {
+                if(result && result['result']){
+                    window.location.reload();
+                }
+            });
+            }
+        });
+
+
     });
-
-
 
 
 
@@ -213,9 +275,9 @@
 
     function check() {
         if($('#searchText').val()=='')
-                return false;
+            return false;
         else
-                return true;
+            return true;
     }
 
 

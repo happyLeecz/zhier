@@ -123,10 +123,15 @@
                         <h2>
                             <a href="/zhier/${answer.questionId}/question">${answer.questionText}</a>
                         </h2>
-                        <h3>
-                                ${fn:substring(answer.answerText,0,60)}...<a class="btn" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer">查看回答 »</a>
-                        </h3>
-                        <hr/>
+
+                            <c:if test="${fn:length(answer.answerText) > 60}">
+                                <h3>${fn:substring(answer.answerText,0,60)}...</h3>
+                            </c:if>
+                           <c:if test="${fn:length(answer.answerText) <= 60}">
+                                <h3>${answer.answerText}</h3>
+                           </c:if>
+
+                        <a class="btn btn-primary" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer">查看回答</a>
                     </div>
                     </c:forEach>
 
@@ -138,8 +143,8 @@
                         <h2>
                             <a href="/zhier/${question.questionId}/question">${question.questionText}</a>
                         </h2>
-                     <h6>发布于：<fmt:formatDate value="${question.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
-                     <h6>最近更新时间：<fmt:formatDate value="${question.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                     <h5>发布于：<fmt:formatDate value="${question.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
+                     <h5>最近更新时间：<fmt:formatDate value="${question.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
                     </div>
                      </c:forEach>
                 </div>
@@ -167,11 +172,13 @@
                             <h2>
                                 <a href="/zhier/${que.questionId}/question">${que.questionText}</a>
                             </h2>
-                            <h6>发布于：<fmt:formatDate value="${que.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
-                            <h6>最近更新时间：<fmt:formatDate value="${que.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                            <h5>发布于：<fmt:formatDate value="${que.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
+                            <h5>最近更新时间：<fmt:formatDate value="${que.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
                         </div>
                     </c:forEach>
                 </div>
+
+
 
             </div>
         </div>
@@ -189,6 +196,7 @@
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+
         $('#followBtn').hide();
         if(${zhieruser.userId} == ${toseeuser.userId});
 else{

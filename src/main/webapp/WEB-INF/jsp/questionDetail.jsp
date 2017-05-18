@@ -174,26 +174,33 @@
                 </h1>
                 <br/>
                 <br/>
-                <h6 >发布人：<a  href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h6>
-                <h6 >发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
-                <h6 >最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h6>
+                <h5 >发布人：<a  href="/zhier/${zhierquestion.createUserId}/user">${zhierquestion.createUserName}</a> </h5>
+                <h5 >发布于：<fmt:formatDate value="${zhierquestion.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
+                <h5 >最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
                 <a class="btn btn-primary btn-large "data-toggle="modal" href="#answerQuestion" id="answerQuestionBtn">回答问题</a>
                 <a class="btn btn-primary btn-large" data-toggle="modal" href="#updateQuestion" id="updateQuestionBtn">修改问题</a>
 
             </div>
         </div>
     </div>
-
+<span>共${answerNumber}条回答</span>
+    <hr/>
 <c:forEach var="answer" items="${answers}" varStatus="a">
     <h2>
         <a style="color:black" href="/zhier/${answer.userId}/user">${answer.userName}</a>
     </h2>
-    <h3>
-            ${fn:substring(answer.answerText,0,60)}...<a  style="color:blueviolet" class="btn " href="/zhier/${zhierquestion.questionId}/question/${answer.answerId}/answer">查看全部 »</a>
-    </h3>
+    <h4>
+        <c:if test="${fn:length(answer.answerText) > 60}">
+           ${fn:substring(answer.answerText,0,60)}...
+        </c:if>
+        <c:if test="${fn:length(answer.answerText) <= 60}">
+            ${answer.answerText}
+        </c:if>
+            <a  style="color:blueviolet" class="btn" href="/zhier/${zhierquestion.questionId}/question/${answer.answerId}/answer">查看全部 »</a>
+    </h4>
     <br/>
-    <h6 style="color:blueviolet">回答于：<fmt:formatDate value="${answer.createTime}" pattern="yyyy年MM月dd日 HH:mm"/></h6>
-    <h6 style="color:blueviolet">最近更新时间：<fmt:formatDate value="${answer.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/></h6>
+    <h5 style="color:blueviolet">回答于：<fmt:formatDate value="${answer.createTime}" pattern="yyyy年MM月dd日 HH:mm"/></h5>
+    <h5 style="color:blueviolet">最近更新时间：<fmt:formatDate value="${answer.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/></h5>
     <ul class="nav nav-pills" >
         <li >
             <a class="disabled"  > <span   class="badge pull-right">${likenums[a.index]}</span> 赞</a>
@@ -202,11 +209,14 @@
             <a class="disabled"  > <span   class="badge pull-right">${dislikenums[a.index]}</span> 反对</a>
         </li>
 
+        <li >
+            <a href="/zhier/${zhierquestion.questionId}/question/${answer.answerId}/answer/comment">评论(${commentNumbers[a.index]})</a>
+        </li>
     </ul>
     <hr />
-
-
 </c:forEach>
+    <h1>Zhier</h1>
+    <h6>Designed by <a href="https://github.com/happyLeecz">CZ</a></h6>
 
 
 

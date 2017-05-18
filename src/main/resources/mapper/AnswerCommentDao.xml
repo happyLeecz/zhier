@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.lcz.zhier.dao.AnswerCommentDao">
+
+    <select id="queryAllCommentByanswerId" resultType="AnswerComment" parameterType="long">
+        SELECT *
+        FROM comment
+        WHERE answer_id=#{answerId}
+    </select>
+
+    <insert id="insertCommentOnAnswer">
+        insert into comment(answer_id,comment_user_id,comment_text)
+        values (#{answerId},#{userId},#{commentText});
+    </insert>
+
+    <insert id="insertCommentOncomment">
+      insert into comment (answer_id,comment_user_id,commentto_user_id,comment_text)
+       values (#{answerId},#{commentUserId},#{commenttoUserId},#{commentText});
+    </insert>
+
+</mapper>

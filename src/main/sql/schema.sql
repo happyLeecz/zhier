@@ -65,3 +65,13 @@ CREATE TABLE concernquestion(
   `question_id`INT(10) NOT NULL COMMENT '问题id',
   PRIMARY KEY (user_id,question_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '问题关注表';
+
+CREATE TABLE comment(
+  `comment_id` int(10) AUTO_INCREMENT NOT NULL COMMENT '评论id',
+  `answer_id` int(10) NOT NULL COMMENT '评论对应的评论id',
+  `comment_user_id` INT(10) NOT NULL COMMENT '评论用户id',
+  `commentto_user_id` INT(10) NOT NULL DEFAULT 0 COMMENT '针对回复功能的回复的用户id',
+  `comment_text` TEXT NOT NULL COMMENT '回复的内容',
+  `create_time` TIMESTAMP DEFAULT current_timestamp COMMENT '评论创建时间',
+  PRIMARY KEY (comment_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '评论表'

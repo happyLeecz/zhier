@@ -6,6 +6,7 @@ import me.lcz.zhier.service.ZhierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class ZhierServiceImpl implements ZhierService {
     private FollowAboutDao followAboutDao;
     @Autowired
     private ConcernQuestionDao concernQuestionDao;
+    @Autowired
+    private AnswerCommentDao answerCommentDao;
 
     public List<ZhierAnswer> getAnswerByQuestion(long questionId) {
         return zhierAnswerDao.queryAllByQuestion(questionId);
@@ -230,6 +233,39 @@ public class ZhierServiceImpl implements ZhierService {
 
     public List<ZhierQuestion> getConcernedQuestion(long userId) {
         return concernQuestionDao.queryConcernedQuestion(userId);
+    }
+
+
+
+
+    //
+    public List<AnswerComment> getAnswerComment(long answerId) {
+        List<AnswerComment> comments = answerCommentDao.queryAllCommentByanswerId(answerId);
+
+            for (AnswerComment comment : comments) {
+                long userId = comment.getCommentUserId();
+                long commenttoUserId = comment.getCommenttoUserId();
+                comment.setCommentUserName(zhierUserDao.queryUserById(userId).getUserName());
+                if (commenttoUserId != 0) {
+                    comment.setCommenttoUserName(zhierUserDao.queryUserById(commenttoUserId).getUserName());
+                }
+            }
+            return comments;
+
+    }
+
+    public boolean addCommentOnAnswer(long answerId, long commentUserId, String commentText) {
+        if(answerCommentDao.insertCommentOnAnswer(answerId, commentUserId, commentText) !=1)
+        return false;
+        else
+            return true;
+    }
+
+    public boolean addCommentOnComment(long answerId, long commentUserId, long commenttoUserId, String commentText) {
+        if(answerCommentDao.insertCommentOncomment(answerId, commentUserId, commenttoUserId, commentText) != 1)
+        return false;
+        else
+            return true;
     }
 }
 
