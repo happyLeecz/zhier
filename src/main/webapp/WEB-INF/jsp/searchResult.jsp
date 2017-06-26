@@ -81,9 +81,6 @@
                             <a href="#raiseQuestion" data-toggle="modal" >提问</a>
 
                         </li>
-                        <li>
-                            <a href="#">标签</a>
-                        </li>
                     </ul>
 
 

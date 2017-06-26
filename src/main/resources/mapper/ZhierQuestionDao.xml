@@ -45,10 +45,15 @@
     <!--</select>-->
 
     <select id="queryAll" resultType="QuestionAndaAnswer">
-        SELECT q.*,a.answer_id,a.user_id,a.user_name,a.answer_text
-        FROM questions q,answers a
-        WHERE q.question_id=a.question_id
-        GROUP BY q.question_id
+--         SELECT q.*,a.answer_id,a.user_id,a.user_name,a.answer_text
+--         FROM questions q,answers a
+--         WHERE q.question_id=a.question_id
+--         GROUP BY q.question_id DESC
+  SELECT q.*,a.answer_id,a.user_id,a.user_name,a.answer_text
+  FROM questions q LEFT JOIN answers a ON q.question_id = a.question_id
+  GROUP BY question_id
+  ORDER BY q.create_time DESC
+
     </select>
 
 

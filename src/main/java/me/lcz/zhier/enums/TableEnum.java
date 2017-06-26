@@ -11,9 +11,8 @@ public enum TableEnum {
     LIKES("回答的喜爱程度表"),
     FOLLOWS("用户关注表"),
     CONCERN("问题关注表"),
-    COMMENT("回答评论表");
-
-
+    COMMENT("回答评论表"),
+    REPORT("举报表");
     private String whichTable;
 
     TableEnum(String whichTable) {

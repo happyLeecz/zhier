@@ -1,6 +1,5 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="common/tag.jsp"%>
 <html>
 <head>
     <title>欢迎来到Zhier</title>
@@ -140,6 +139,7 @@
         } else {
             if ($('#inputPassword4').val() !== $('#inputPassword3').val()) {
                 result = false;
+                $('#label5').text('确认密码错误');
             }else{
                 $('#label5').text('密码验证正确');
             }

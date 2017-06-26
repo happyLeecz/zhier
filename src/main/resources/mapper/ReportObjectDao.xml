@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.lcz.zhier.dao.ReportObjectDao">
+
+<insert id="insertReportInfo">
+    insert into reportlist(report_id,report_type,report_user_id)
+    values(#{reportId},#{reportType},#{reportUserId})
+</insert>
+
+    <delete id="deleteReportInfo">
+        DELETE from reportlist
+        where report_id=#{reportId} AND report_type=#{reportType}
+    </delete>
+
+    <select id="getReportQuestion" resultType="ZhierQuestion">
+        SELECT *
+        FROM questions
+        WHERE question_id IN(
+        SELECT report_id
+        from reportlist
+        where report_type = 0
+        )
+    </select>
+
+    <select id="getReportAnswer" resultType="QuestionAndaAnswer">
+
+        select q.question_id,q.question_text,a.answer_id,a.answer_text
+        from (answers a RIGHT JOIN reportlist r ON a.answer_id = r.report_id)LEFT
+        JOIN questions q on a.question_id =q.question_id
+        WHERE r.report_type = 1
+
+    </select>
+
+    <select id="getReportInfo" resultType="ReportObject">
+        SELECT *
+        FROM reportlist
+        where report_id=#{reportId} and report_type=#{reportType}
+    </select>
+
+
+
+    </mapper>

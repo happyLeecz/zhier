@@ -142,9 +142,6 @@
                             <a href="#raiseQuestion" data-toggle="modal" >提问</a>
 
                         </li>
-                        <li>
-                            <a href="#">标签</a>
-                        </li>
                     </ul>
 
 
@@ -176,6 +173,7 @@
             <br/>
             <br/>
             <a class="btn btn-primary btn-large" data-toggle="modal" href="#comment" id="commentBtn">评论</a>
+            共有${num}个评论
             <hr>
 
                <c:forEach var="comment" items="${comments}" varStatus="num">
@@ -189,8 +187,13 @@
                    </c:if>
                    <h4>${comment.commentText}</h4>
                    <h6><fmt:formatDate value="${comment.createTime}" pattern="yyyy年MM月dd日 HH:mm"></fmt:formatDate></h6>
+
+                       <c:if test="${zhieruser.userId != comment.commentUserId}">
                    <h6><a class="recomment" href="#commentOnComment" data-toggle="modal" value="${comment.commentUserId}"> 回复 </a></h6>
-                   <hr/>
+                       </c:if>
+
+
+                       <hr/>
                    </div>
                </c:forEach>
 
@@ -229,8 +232,15 @@
                 );}return false;
         });
 
+
+
+        $('#commentBtn').click(function () {
+            $('#commentText').val('');
+        });
+
         $('.recomment').click(function () {
           commentUserId = $(this).attr('value');
+            $('#commentText2').val('');
         });
         
         $('#submitcomment').click(function () {
@@ -249,7 +259,7 @@
             if($('#commentText2').val()==''){
                 return false;
             }else{
-            $.post('/zhier/comment',{answerId:${answerId},commentUserId:${zhieruser.userId},commenttoUserId:commentUserId,commentText:$('#commentText').val(),type:1},function (result) {
+            $.post('/zhier/comment',{answerId:${answerId},commentUserId:${zhieruser.userId},commenttoUserId:commentUserId,commentText:$('#commentText2').val(),type:1},function (result) {
                 if(result && result['result']){
                     window.location.reload();
                 }

@@ -79,9 +79,6 @@ a.answer:hover{
                             <a href="#raiseQuestion" data-toggle="modal" >提问</a>
 
                         </li>
-                        <li>
-                            <a href="#">标签</a>
-                        </li>
                     </ul>
 
 
@@ -113,17 +110,17 @@ a.answer:hover{
             <br/>
             <br/>
 <c:forEach var="qandanswer" items="${qandanswers}">
-            <div>
-                <span class="label label-primary" ><a style="color:white" href="/zhier/${qandanswer.questionTag}/questionsByTag">${qandanswer.questionTag}</a> </span>
+            <div class="jumbotron">
+                <span class="label label-primary" ><a style="color:white" href="/zhier/${qandanswer.questionTag}/questionsByTag" target="_blank">${qandanswer.questionTag}</a> </span>
                 <h1>
-                    <a  style="color:blueviolet" href="/zhier/${qandanswer.questionId}/question">${qandanswer.questionText}</a>
+                    <a  style="color:blueviolet" href="/zhier/${qandanswer.questionId}/question" target="_blank">${qandanswer.questionText}</a>
                 </h1>
 
                 <h2>
-                    <b><a style="color:black" href="/zhier/${qandanswer.userId}/user">${qandanswer.userName}</a></b>
+                    <b><a style="color:black" href="/zhier/${qandanswer.userId}/user" target="_blank">${qandanswer.userName}</a></b>
                 </h2>
                 <h4>
-                    <a class="answer" style="color:black" href="/zhier/${qandanswer.questionId}/question/${qandanswer.answerId}/answer">
+                    <a class="answer" style="color:black" href="/zhier/${qandanswer.questionId}/question/${qandanswer.answerId}/answer" target="_blank">
                         <c:if test="${fn:length(qandanswer.answerText) > 60}">
                             <h3>${fn:substring(qandanswer.answerText,0,60)}...</h3>
                         </c:if>
@@ -135,7 +132,7 @@ a.answer:hover{
             </div>
     <hr/>
 </c:forEach>
-            <a href="/zhier/test">测试</a>
+
 
           <h1>Zhier</h1>
             <h6>Designed by <a href="https://github.com/happyLeecz">CZ</a></h6>
@@ -163,6 +160,7 @@ $('#btnRaiseQ').click(function(){
                         $('#questionTag').val('');
                         $('#questionText').val('');
                         $('#raiseQuestion').modal('hide');
+                        window.location.reload();
                     }else {
                         console.log('not ok');
                          alert("抱歉，提交未成功");

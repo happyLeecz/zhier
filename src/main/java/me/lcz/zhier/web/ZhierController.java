@@ -1,5 +1,6 @@
 package me.lcz.zhier.web;
 
+import me.lcz.zhier.dao.ReportObjectDao;
 import me.lcz.zhier.dto.ActionResult;
 import me.lcz.zhier.entity.*;
 import me.lcz.zhier.enums.TableEnum;
@@ -22,6 +23,8 @@ import java.util.List;
 public class ZhierController {
     @Autowired
     private ZhierService zhierService;
+    @Autowired
+    private ReportObjectDao reportObjectDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String zhier(Model model, HttpSession httpSession) {
@@ -70,7 +73,8 @@ public class ZhierController {
     }
 
     @RequestMapping(value = "/{userId}/user", method = RequestMethod.GET)
-    public String toUserPage(@PathVariable("userId") long userId, Model model) {
+    public String toUserPage(@PathVariable("userId") long userId,HttpSession httpSession, Model model) {
+        ZhierUser loginUser = (ZhierUser) httpSession.getAttribute("zhieruser");
         ZhierUser zhierUser = zhierService.findUser(userId);
         model.addAttribute("toseeuser", zhierUser);
         List<QuestionAndaAnswer> questionAndaAnswers = zhierService.getAnswerByUser(userId);
@@ -83,7 +87,15 @@ public class ZhierController {
         model.addAttribute("following",following);
         List<ZhierQuestion> concernedQuestion = zhierService.getConcernedQuestion(userId);
         model.addAttribute("concernedQ",concernedQuestion);
-        return "userDetail";
+        if(loginUser.getUserAuthority() == 1) {
+            return "userDetail";
+        }else if(loginUser.getUserId() == userId){
+            List<ZhierQuestion> reportQuestion = reportObjectDao.getReportQuestion();
+            List<QuestionAndaAnswer> reportAnswer = reportObjectDao.getReportAnswer();
+            model.addAttribute("reportquestion",reportQuestion);
+            model.addAttribute("reportanswer",reportAnswer);
+            return "adminDetail";
+        }else return "userDetail";
     }
 
 
@@ -331,6 +343,7 @@ public class ZhierController {
     method = RequestMethod.GET)
     public String getComments(@PathVariable(value = "answerId") long answerId,Model model){
         List<AnswerComment> comments = zhierService.getAnswerComment(answerId);
+        model.addAttribute("num",comments.size());
         model.addAttribute("comments",comments);
         model.addAttribute("answerId",answerId);
         return "comment";
@@ -354,17 +367,49 @@ public class ZhierController {
             return new ActionResult(TableEnum.COMMENT.getWhichTable(),isSuccess2);
         }
     }
-
-
-
-
-
-    @RequestMapping(value = "/test",
-            method = RequestMethod.GET,
-            produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/report",
+                    method = RequestMethod.POST,
+                    produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public List findIfFollow(){
+    public ActionResult report(@RequestParam(value = "reportId") long reportId,
+                               @RequestParam(value = "reportType") int reportType,
+                               @RequestParam(value = "reportUserId") long reportUserId){
+          if(reportObjectDao.getReportInfo(reportId,reportType)==null) {
+              reportObjectDao.insertReportInfo(reportId, reportType, reportUserId);
+              return new ActionResult(TableEnum.REPORT.getWhichTable(), true);
+          }
+        else
+            return new ActionResult(TableEnum.REPORT.getWhichTable(),false);
+    }
 
-      return zhierService.getAllQuestion();
+    @RequestMapping(value = "/deleteBadInfo",
+                    method = RequestMethod.POST,
+                   produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult delete(@RequestParam(value = "reportId") int reportId,
+                               @RequestParam(value = "reportType") int reportType){
+        reportObjectDao.deleteReportInfo(reportId,reportType);
+    if(reportType == 0){
+         zhierService.deleteQuestion(reportId);
+        List<ZhierAnswer> answers = zhierService.getAnswerByQuestion(reportId);
+        for(ZhierAnswer answer : answers){
+            zhierService.deleteAnswer(answer.getAnswerId());
+        }
+        return new ActionResult(TableEnum.QUESTIONS.getWhichTable(),true);
+    }else{
+
+         zhierService.updateAnswer(reportId,"该回答涉嫌违规，已被屏蔽");
+            return new ActionResult(TableEnum.ANSWERS.getWhichTable(),true);
+        }
+    }
+
+    @RequestMapping(value = "/cancle",
+    method = RequestMethod.POST,
+    produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public ActionResult cancle(long reportId,int reportType){
+        if(reportObjectDao.deleteReportInfo(reportId, reportType)==1){
+            return new ActionResult(TableEnum.REPORT.getWhichTable(),true);
+        }else return new ActionResult(TableEnum.REPORT.getWhichTable(),false);
     }
 }

@@ -55,7 +55,7 @@ public interface ZhierService {
     List<AnswerComment> getAnswerComment(long answerId);
     boolean addCommentOnAnswer(long answerId,long commentUserId,String commentText);
     boolean addCommentOnComment(long answerId,long commentUserId,long commenttoUserId,String commentText);
-
+    //report
 
 
 

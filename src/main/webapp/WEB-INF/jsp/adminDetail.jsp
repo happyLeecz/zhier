@@ -111,56 +111,58 @@
                 <li><a href="#following" data-toggle="tab">关注的人</a></li>
                 <li><a href="#follower" data-toggle="tab">谁关注他</a></li>
                 <li><a href="#concernedQuestion" data-toggle="tab">关注的问题</a></li>
+                <li><a href="#reportQuestion" data-toggle="tab">管理举报的问题</a></li>
+                <li><a href="#reportAnswer" data-toggle="tab">管理举报的答案</a></li>
             </ul>
              
             <div class="tab-content">
                 <div class="tab-pane active" id="answers">
                     <c:forEach var="answer" items="${toseeUserAnswers}">
-                    <div class="jumbotron">
-                        <h2>
-                            <a href="/zhier/${answer.questionId}/question">${answer.questionText}</a>
-                        </h2>
+                        <div class="jumbotron">
+                            <h2>
+                                <a href="/zhier/${answer.questionId}/question">${answer.questionText}</a>
+                            </h2>
 
                             <c:if test="${fn:length(answer.answerText) > 60}">
                                 <h3>${fn:substring(answer.answerText,0,60)}...</h3>
                             </c:if>
-                           <c:if test="${fn:length(answer.answerText) <= 60}">
+                            <c:if test="${fn:length(answer.answerText) <= 60}">
                                 <h3>${answer.answerText}</h3>
-                           </c:if>
+                            </c:if>
 
-                        <a class="btn btn-primary" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer">查看回答</a>
-                    </div>
+                            <a class="btn btn-primary" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer">查看回答</a>
+                        </div>
                     </c:forEach>
 
                 </div>
 
                 <div class="tab-pane" id="Questions">
-                 <c:forEach var="question" items="${toseeUserQuestions}">
-                    <div class="jumbotron">
-                        <h2>
-                            <a href="/zhier/${question.questionId}/question">${question.questionText}</a>
-                        </h2>
-                     <h5>发布于：<fmt:formatDate value="${question.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
-                     <h5>最近更新时间：<fmt:formatDate value="${question.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
-                    </div>
-                     </c:forEach>
+                    <c:forEach var="question" items="${toseeUserQuestions}">
+                        <div class="jumbotron">
+                            <h2>
+                                <a href="/zhier/${question.questionId}/question">${question.questionText}</a>
+                            </h2>
+                            <h5>发布于：<fmt:formatDate value="${question.createTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
+                            <h5>最近更新时间：<fmt:formatDate value="${question.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
+                        </div>
+                    </c:forEach>
                 </div>
 
                 <div class="tab-pane" id="following">
                     <c:forEach var="fing" items="${following}">
                         <div class="jumbotron">
-                                <a href="/zhier/${fing.userId}/user">${fing.userName}</a>
+                            <a href="/zhier/${fing.userId}/user">${fing.userName}</a>
                         </div>
                     </c:forEach>
 
                 </div>
 
                 <div class="tab-pane" id="follower">
-                        <c:forEach var="fer" items="${follower}">
-                            <div class="jumbotron">
-                                <a href="/zhier/${fer.userId}/user">${fer.userName}</a>
-                            </div>
-                        </c:forEach>
+                    <c:forEach var="fer" items="${follower}">
+                        <div class="jumbotron">
+                            <a href="/zhier/${fer.userId}/user">${fer.userName}</a>
+                        </div>
+                    </c:forEach>
                 </div>
 
                 <div class="tab-pane" id="concernedQuestion">
@@ -175,6 +177,39 @@
                     </c:forEach>
                 </div>
 
+                <div class="tab-pane" id="reportQuestion">
+                    <c:forEach var="reportQ" items="${reportquestion}">
+                        <div class="jumbotron">
+                            <h2>
+                                <a href="/zhier/${reportQ.questionId}/question" target="_blank">${reportQ.questionText}</a>
+                            </h2>
+                            <a class="btn pull-right cancleQ" value="${reportQ.questionId}">误报</a>
+                            <a class="btn pull-right delQ" value="${reportQ.questionId}">删除</a>
+                        </div>
+                    </c:forEach>
+                </div>
+
+                <div class="tab-pane" id="reportAnswer">
+                    <c:forEach var="answer" items="${reportanswer}">
+                        <div class="jumbotron">
+                            <h2>
+                                <a href="/zhier/${answer.questionId}/question">${answer.questionText}</a>
+                            </h2>
+
+                            <c:if test="${fn:length(answer.answerText) > 60}">
+                                <h3>${fn:substring(answer.answerText,0,60)}...</h3>
+                            </c:if>
+                            <c:if test="${fn:length(answer.answerText) <= 60}">
+                                <h3>${answer.answerText}</h3>
+                            </c:if>
+
+                            <a class="btn btn-primary" href="/zhier/${answer.questionId}/question/${answer.answerId}/answer" target="_blank">查看回答</a>
+                            <a class="btn pull-right cancleA" value="${answer.answerId}">误报</a>
+                            <a class="btn pull-right delA" value="${answer.answerId}">屏蔽</a>
+
+                        </div>
+                    </c:forEach>
+                </div>
 
 
             </div>
@@ -193,44 +228,44 @@
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-
+var id,node;
         $('#followBtn').hide();
         if(${zhieruser.userId} == ${toseeuser.userId});
-else{
+        else{
             $('#followBtn').show();
-        $.post('/zhier/iffollow',{userId:${zhieruser.userId},followingId:${toseeuser.userId}},function (result) {
-            if(result && result['result']==true){
-                $('#followBtn').removeClass('btn-primary');
-                $('#followBtn').addClass('btn-default');
-                $('#followBtn').text('正在关注');
-            }else{
-                $('#followBtn').removeClass('btn-default');
-                $('#followBtn').addClass('btn-primary');
-                $('#followBtn').text('关注');
-            }
-        });
-
-        $('#followBtn').click(function () {
             $.post('/zhier/iffollow',{userId:${zhieruser.userId},followingId:${toseeuser.userId}},function (result) {
                 if(result && result['result']==true){
-                    $.post('/zhier/followordelete',{userId:${zhieruser.userId},followingId:${toseeuser.userId},type:0},function (result2) {
-                        if(result2 && result2['result']==true) {
-                            $('#followBtn').removeClass('btn-default');
-                            $('#followBtn').addClass('btn-primary');
-                            $('#followBtn').text('关注');
-                        }
-                    });
+                    $('#followBtn').removeClass('btn-primary');
+                    $('#followBtn').addClass('btn-default');
+                    $('#followBtn').text('正在关注');
                 }else{
-                    $.post('/zhier/followordelete',{userId:${zhieruser.userId},followingId:${toseeuser.userId},type:1},function (result3) {
-                        if(result3 && result3['result']==true) {
-                            $('#followBtn').removeClass('btn-primary');
-                            $('#followBtn').addClass('btn-default');
-                            $('#followBtn').text('正在关注');
-                        }
-                    });
+                    $('#followBtn').removeClass('btn-default');
+                    $('#followBtn').addClass('btn-primary');
+                    $('#followBtn').text('关注');
                 }
             });
-        });
+
+            $('#followBtn').click(function () {
+                $.post('/zhier/iffollow',{userId:${zhieruser.userId},followingId:${toseeuser.userId}},function (result) {
+                    if(result && result['result']==true){
+                        $.post('/zhier/followordelete',{userId:${zhieruser.userId},followingId:${toseeuser.userId},type:0},function (result2) {
+                            if(result2 && result2['result']==true) {
+                                $('#followBtn').removeClass('btn-default');
+                                $('#followBtn').addClass('btn-primary');
+                                $('#followBtn').text('关注');
+                            }
+                        });
+                    }else{
+                        $.post('/zhier/followordelete',{userId:${zhieruser.userId},followingId:${toseeuser.userId},type:1},function (result3) {
+                            if(result3 && result3['result']==true) {
+                                $('#followBtn').removeClass('btn-primary');
+                                $('#followBtn').addClass('btn-default');
+                                $('#followBtn').text('正在关注');
+                            }
+                        });
+                    }
+                });
+            });
         }
 
 
@@ -253,6 +288,47 @@ else{
                         }
                 );}return false;
         });
+
+        $('.delA').click(function () {
+            id=$(this).attr('value');
+            node=$(this);
+            $.post('/zhier/deleteBadInfo',{reportId:id,reportType:1},function (result) {
+                if(result && result['result']){
+                   node.parent('div').remove();
+                }
+            });
+        });
+
+        $('.delQ').click(function () {
+            id=$(this).attr('value');
+            node=$(this);
+            $.post('/zhier/deleteBadInfo',{reportId:id,reportType:0},function (result) {
+                if(result && result['result']){
+                    node.parent('div').remove();
+                }
+            });
+        });
+
+        $('.cancleA').click(function(){
+            id=$(this).attr('value');
+            node=$(this);
+            $.post('/zhier/cancle',{reportId:id,reportType:1},function (result) {
+               if(result && result['result']) {
+                   node.parent('div').remove();
+               }
+            });
+        });
+
+        $('.cancleQ').click(function(){
+            id=$(this).attr('value');
+            node=$(this);
+            $.post('/zhier/cancle',{reportId:id,reportType:0},function (result) {
+                if(result && result['result']) {
+                    node.parent('div').remove();
+                }
+            });
+        });
+
     });
 
 

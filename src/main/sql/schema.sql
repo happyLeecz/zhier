@@ -74,4 +74,12 @@ CREATE TABLE comment(
   `comment_text` TEXT NOT NULL COMMENT '回复的内容',
   `create_time` TIMESTAMP DEFAULT current_timestamp COMMENT '评论创建时间',
   PRIMARY KEY (comment_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '评论表'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '评论表';
+
+CREATE TABLE reportlist(
+  `report_id` int(10) NOT NULL COMMENT '举报对象id',
+  `report_type` int(1) NOT NULL COMMENT '举报对象类型',
+  `report_user_id` int(10) NOT NULL COMMENT '举报用户id',
+  `create_time` TIMESTAMP DEFAULT current_timestamp COMMENT '创建时间',
+  PRIMARY KEY (report_id,report_type)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '举报列表';

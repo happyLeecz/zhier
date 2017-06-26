@@ -132,9 +132,6 @@
                         <li>
                             <a href="#raiseQuestion" data-toggle="modal" >提问</a>
                         </li>
-                        <li>
-                            <a href="#">标签</a>
-                        </li>
                     </ul>
                     <form class="navbar-form navbar-left" role="search" method="post" action="/zhier/search" onsubmit="return check()">
                         <div class="form-group">
@@ -179,6 +176,7 @@
                 <h5 >最近更新时间：<fmt:formatDate value="${zhierquestion.latestUpdateTime}" pattern="yyyy年MM月dd日 HH:mm"/> </h5>
                 <a class="btn btn-primary btn-large "data-toggle="modal" href="#answerQuestion" id="answerQuestionBtn">回答问题</a>
                 <a class="btn btn-primary btn-large" data-toggle="modal" href="#updateQuestion" id="updateQuestionBtn">修改问题</a>
+                <a class="btn pull-right" id="report" style="color: grey" >举报</a>
 
             </div>
         </div>
@@ -212,6 +210,8 @@
         <li >
             <a href="/zhier/${zhierquestion.questionId}/question/${answer.answerId}/answer/comment">评论(${commentNumbers[a.index]})</a>
         </li>
+
+        <a class="btn pull-right reportAnswer" style="color: grey" value="${answer.answerId}">举报</a>
     </ul>
     <hr />
 </c:forEach>
@@ -228,6 +228,7 @@
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+
         $('#answerQuestionBtn').hide();
         $('#updateQuestionBtn').hide();
 
@@ -249,6 +250,7 @@
                 $('#concernqBtn').text('关注该问题');
             }
         });
+
         $('#concernqBtn').click(function () {
            $.post('/zhier/ifconcern',{userId:${zhieruser.userId},questionId:${zhierquestion.questionId}},function (result) {
               if(result && result['result'] == true){
@@ -341,6 +343,23 @@
             );}else return false;
         });
 
+        $('#report').click(function () {
+            $.post('/zhier/report',{reportId:${zhierquestion.questionId},reportType:0,reportUserId:${zhieruser.userId}},function (result) {
+                if(result && result['result'])
+                    alert("举报成功，感谢您的举报让Zhier变得更好");
+                else
+                    alert("此内容已被举报，感谢您的支持");
+            });
+        });
+
+        $('.reportAnswer').click(function () {
+            $.post('/zhier/report',{reportId:$(this).attr('value'),reportType:1,reportUserId:${zhieruser.userId}},function (result) {
+                if(result && result['result'])
+                    alert("举报成功，感谢您的举报让Zhier变得更好");
+                else
+                    alert("此内容已被举报，感谢您的支持");
+            });
+        })
     });
 
 

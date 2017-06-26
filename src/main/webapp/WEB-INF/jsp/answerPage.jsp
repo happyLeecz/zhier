@@ -98,9 +98,6 @@
                         <li>
                             <a href="#raiseQuestion" data-toggle="modal" >提问</a>
                         </li>
-                        <li>
-                            <a href="#">标签</a>
-                        </li>
                     </ul>
                     <form class="navbar-form navbar-left" role="search" method="post" action="/zhier/search" onsubmit="return check()">
                         <div class="form-group">
@@ -167,6 +164,7 @@
          <li>
              <a href="/zhier/${zhierquestion.questionId}/question/${zhieranswer.answerId}/answer/comment">评论(${commentnum})</a>
          </li>
+        <a class="btn pull-right" id="report" style="color: grey" >举报</a>
     </ul>
     <hr />
     <h1>Zhier</h1>
@@ -332,6 +330,15 @@
                     return;
                 }
 
+            });
+        });
+
+        $('#report').click(function () {
+            $.post('/zhier/report',{reportId:${zhieranswer.answerId},reportType:1,reportUserId:${zhieruser.userId}},function (result) {
+                if(result && result['result'])
+                    alert("举报成功，感谢您的举报让Zhier变得更好");
+                else
+                    alert("此内容已被举报，感谢您的支持");
             });
         });
     });
